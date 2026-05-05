@@ -4,852 +4,827 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Access Clienti</title>
+    <title>Access Clienti – MedEA Telemedicina</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-        :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
-            --primary-light: #dbeafe;
-            --bg: #f1f5f9;
-            --white: #ffffff;
-            --text: #1e293b;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-            --danger: #ef4444;
-            --success: #16a34a;
-            --warning: #d97706;
-            --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.05);
-            --shadow-lg: 0 10px 25px -3px rgba(0,0,0,0.12), 0 4px 8px -2px rgba(0,0,0,0.06);
-        }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-        }
+:root {
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --primary-light: #eff6ff;
+    --primary-ring: rgba(37,99,235,0.15);
+    --bg: #f8fafc;
+    --bg-alt: #f1f5f9;
+    --white: #ffffff;
+    --text: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --border: #e2e8f0;
+    --border-light: #f1f5f9;
+    --danger: #ef4444;
+    --danger-light: #fef2f2;
+    --success: #10b981;
+    --success-light: #ecfdf5;
+    --warning: #f59e0b;
+    --warning-light: #fffbeb;
+    --radius: 10px;
+    --radius-lg: 14px;
+    --radius-xl: 20px;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
+    --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+    --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.06);
+    --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-        /* ── LOGIN OVERLAY ── */
-        .login-overlay {
-            position: fixed; inset: 0;
-            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #2563eb 100%);
-            z-index: 9999; display: flex; align-items: center; justify-content: center;
-            padding: 20px;
-        }
-        .login-overlay.hidden { display: none; }
-        .login-box {
-            background: white; border-radius: 20px; padding: 40px;
-            width: 100%; max-width: 380px;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.3);
-        }
-        .login-logo { text-align: center; margin-bottom: 28px; }
-        .login-logo img.logo-big {
-            height: 70px; margin-bottom: 16px;
-        }
-        .login-title { font-size: 22px; font-weight: 700; color: var(--text); }
-        .login-subtitle { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
-        .login-form { display: flex; flex-direction: column; gap: 14px; }
-        .login-error {
-            background: #fef2f2; border: 1px solid #fca5a5; border-radius: 8px;
-            padding: 10px 12px; font-size: 13px; color: #b91c1c;
-            display: none;
-        }
-        .login-error.visible { display: block; }
-        .login-btn-loading { pointer-events: none; opacity: 0.7; }
+html { scroll-behavior: smooth; }
 
-        /* ── USER BADGE ── */
-        .user-badge {
-            display: flex; align-items: center; gap: 8px;
-            padding: 6px 12px; background: var(--bg);
-            border-radius: 20px; font-size: 13px; font-weight: 500;
-        }
-        .user-role-pill {
-            font-size: 10px; font-weight: 700; padding: 2px 8px;
-            border-radius: 20px; text-transform: uppercase; letter-spacing: 0.05em;
-        }
-        .user-role-pill.admin { background: #fef3c7; color: #92400e; }
-        .user-role-pill.operatore { background: var(--primary-light); color: var(--primary); }
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+}
 
-        /* ── HEADER ── */
-        .header {
-            background: var(--white);
-            border-bottom: 1px solid var(--border);
-            padding: 14px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: var(--shadow);
-        }
-        .header-left { display: flex; align-items: center; gap: 12px; }
-        .logo-img { height: 36px; }
-        .header h1 { font-size: 19px; font-weight: 700; }
-        .header-right { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+/* ── ANIMATIONS ── */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(12px) scale(0.98); } to { opacity: 1; transform: none; } }
+@keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+@keyframes toastIn { from { transform: translateX(120%); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes toastOut { from { transform: none; opacity: 1; } to { transform: translateX(120%); opacity: 0; } }
+@keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
 
-        /* ── BUTTONS ── */
-        .btn {
-            padding: 8px 15px; border-radius: 8px; border: none;
-            cursor: pointer; font-size: 13px; font-weight: 500;
-            display: inline-flex; align-items: center; gap: 5px;
-            transition: all 0.15s; line-height: 1.4;
-        }
-        .btn-primary { background: var(--primary); color: #fff; }
-        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 3px 8px rgba(37,99,235,0.3); }
-        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
-        .btn-outline:hover { background: var(--bg); }
-        .btn-danger { background: var(--danger); color: #fff; }
-        .btn-danger:hover { background: #dc2626; }
-        .btn-success { background: var(--success); color: #fff; }
-        .btn-success:hover { background: #15803d; }
-        .btn-warning { background: var(--warning); color: #fff; }
-        .btn-warning:hover { background: #b45309; }
-        .btn-sm { padding: 5px 10px; font-size: 12px; }
+.animate-fade { animation: fadeIn 0.2s ease; }
+.animate-slide-up { animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
 
-        /* ── MAIN ── */
-        .main { padding: 20px 24px; max-width: 1440px; margin: 0 auto; }
+/* ── INLINE SVG ICONS ── */
+.ic { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.ic svg { width: 1em; height: 1em; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
-        .toolbar {
-            display: flex; gap: 10px; margin-bottom: 16px; align-items: center; flex-wrap: wrap;
-        }
-        .search-wrapper { position: relative; flex: 1; min-width: 220px; }
-        .search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 14px; pointer-events: none; }
-        .search-input {
-            width: 100%; padding: 9px 12px 9px 36px;
-            border: 1px solid var(--border); border-radius: 8px;
-            font-size: 14px; background: var(--white); color: var(--text);
-            outline: none; transition: border-color 0.15s;
-        }
-        .search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+/* ── LOGIN OVERLAY ── */
+.login-overlay {
+    position: fixed; inset: 0;
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #1d4ed8 100%);
+    z-index: 9999; display: flex; align-items: center; justify-content: center;
+    padding: 20px; animation: fadeIn 0.4s ease;
+}
+.login-overlay.hidden { display: none; }
+.login-box {
+    background: white; border-radius: var(--radius-xl); padding: 44px 40px;
+    width: 100%; max-width: 400px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.25);
+    animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.login-logo { text-align: center; margin-bottom: 32px; }
+.login-logo img.logo-big { height: 64px; margin-bottom: 20px; }
+.login-title { font-size: 24px; font-weight: 700; color: var(--text); letter-spacing: -0.025em; }
+.login-subtitle { font-size: 14px; color: var(--text-muted); margin-top: 6px; }
+.login-form { display: flex; flex-direction: column; gap: 16px; }
+.login-error {
+    background: var(--danger-light); border: 1px solid #fecaca; border-radius: var(--radius);
+    padding: 12px 14px; font-size: 13px; color: #dc2626; display: none;
+    animation: slideDown 0.2s ease;
+}
+.login-error.visible { display: block; }
+.login-btn-loading { pointer-events: none; opacity: 0.7; }
 
-        /* ── VIEW TOGGLE ── */
-        .view-toggle {
-            display: flex; gap: 2px; background: var(--bg);
-            border: 1px solid var(--border); border-radius: 9px; padding: 3px;
-        }
-        .vt-btn {
-            padding: 6px 12px; border-radius: 7px; border: none;
-            background: none; cursor: pointer; font-size: 13px;
-            color: var(--text-muted); transition: all 0.15s; white-space: nowrap;
-        }
-        .vt-btn.active {
-            background: var(--white); color: var(--primary);
-            box-shadow: 0 1px 4px rgba(0,0,0,0.1); font-weight: 600;
-        }
+/* ── USER BADGE ── */
+.user-badge {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 14px; background: var(--bg-alt);
+    border-radius: 24px; font-size: 13px; font-weight: 500;
+    border: 1px solid var(--border);
+}
+.user-role-pill {
+    font-size: 10px; font-weight: 700; padding: 2px 8px;
+    border-radius: 20px; text-transform: uppercase; letter-spacing: 0.06em;
+}
+.user-role-pill.admin { background: #fef3c7; color: #92400e; }
+.user-role-pill.operatore { background: var(--primary-light); color: var(--primary); }
 
-        .stats { font-size: 13px; color: var(--text-muted); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-        .active-letter-badge {
-            display: inline-flex; align-items: center; gap: 5px;
-            background: var(--primary); color: #fff;
-            font-size: 12px; font-weight: 600; padding: 2px 10px 2px 8px;
-            border-radius: 20px;
-        }
-        .active-letter-badge button {
-            background: none; border: none; color: #fff; cursor: pointer;
-            font-size: 14px; line-height: 1; padding: 0 0 0 2px;
-        }
+/* ── HEADER ── */
+.header {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 0 28px; height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: var(--shadow-sm);
+    backdrop-filter: blur(12px);
+    background: rgba(255,255,255,0.95);
+}
+.header-left { display: flex; align-items: center; gap: 14px; }
+.logo-img { height: 32px; }
+.header h1 { font-size: 17px; font-weight: 700; letter-spacing: -0.02em; color: var(--text); }
+.header-right { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
 
-        /* ── CONTENT AREA (main + alpha sidebar) ── */
-        .content-area { display: flex; gap: 10px; align-items: flex-start; }
-        .clients-area { flex: 1; min-width: 0; }
+/* ── BUTTONS ── */
+.btn {
+    padding: 8px 16px; border-radius: var(--radius); border: none;
+    cursor: pointer; font-size: 13px; font-weight: 600; font-family: inherit;
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: all var(--transition); line-height: 1.4;
+    white-space: nowrap; position: relative; overflow: hidden;
+}
+.btn:active { transform: scale(0.97); }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:hover { background: var(--primary-dark); box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
+.btn-outline { background: var(--white); border: 1px solid var(--border); color: var(--text-secondary); }
+.btn-outline:hover { background: var(--bg); border-color: #cbd5e1; color: var(--text); }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-danger:hover { background: #dc2626; box-shadow: 0 4px 12px rgba(239,68,68,0.3); }
+.btn-success { background: var(--success); color: #fff; }
+.btn-success:hover { background: #059669; }
+.btn-warning { background: var(--warning); color: #fff; }
+.btn-warning:hover { background: #d97706; }
+.btn-ghost { background: none; border: none; color: var(--text-secondary); padding: 8px; }
+.btn-ghost:hover { background: var(--bg-alt); color: var(--text); }
+.btn-sm { padding: 5px 10px; font-size: 12px; border-radius: 8px; }
+.btn-icon { padding: 7px; width: 34px; height: 34px; justify-content: center; }
 
-        /* ── ALPHA SIDEBAR ── */
-        .alpha-sidebar {
-            width: 28px; position: sticky; top: 74px;
-            display: flex; flex-direction: column; align-items: center;
-            gap: 1px; user-select: none; flex-shrink: 0;
-            padding: 6px 0; background: var(--white);
-            border: 1px solid var(--border); border-radius: 12px;
-            box-shadow: var(--shadow);
-        }
-        .alpha-btn {
-            width: 22px; height: 18px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 10px; font-weight: 700; letter-spacing: 0;
-            border-radius: 5px; border: none; background: none;
-            transition: all 0.12s; line-height: 1; cursor: default;
-            color: #cbd5e1;
-        }
-        .alpha-btn.has { color: var(--primary); cursor: pointer; }
-        .alpha-btn.has:hover { background: var(--primary-light); }
-        .alpha-btn.active { background: var(--primary) !important; color: #fff !important; }
-        .alpha-sep { width: 14px; height: 1px; background: var(--border); margin: 2px 0; }
+/* ── MAIN ── */
+.main { padding: 20px 28px; max-width: 1440px; margin: 0 auto; }
 
-        /* ── LETTER SECTION ── */
-        .letter-section { margin-bottom: 6px; }
-        .letter-section-hd {
-            font-size: 11px; font-weight: 800; color: var(--primary);
-            padding: 3px 10px; margin-bottom: 6px;
-            background: var(--primary-light);
-            border-radius: 6px; display: inline-block;
-            letter-spacing: 0.04em;
-        }
+.toolbar {
+    display: flex; gap: 10px; margin-bottom: 18px; align-items: center; flex-wrap: wrap;
+}
+.search-wrapper { position: relative; flex: 1; min-width: 240px; }
+.search-icon {
+    position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+    color: var(--text-muted); pointer-events: none; display: flex;
+}
+.search-input {
+    width: 100%; padding: 10px 14px 10px 40px;
+    border: 1px solid var(--border); border-radius: var(--radius);
+    font-size: 14px; font-family: inherit;
+    background: var(--white); color: var(--text);
+    outline: none; transition: all var(--transition);
+}
+.search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-ring); }
+.search-input::placeholder { color: var(--text-muted); }
 
-        /* ── CARD GRID ── */
-        .client-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(265px, 1fr));
-            gap: 14px;
-        }
-        .client-card {
-            background: var(--white); border-radius: 12px; padding: 18px;
-            cursor: pointer; transition: all 0.2s; border: 1px solid var(--border);
-            box-shadow: var(--shadow); position: relative; overflow: hidden;
-        }
-        .client-card::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-            background: linear-gradient(90deg, #2563eb, #60a5fa);
-            opacity: 0; transition: opacity 0.2s;
-        }
-        .client-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: #bfdbfe; }
-        .client-card:hover::before { opacity: 1; }
-        .client-avatar {
-            width: 44px; height: 44px; border-radius: 11px;
-            background: var(--primary-light); color: var(--primary);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 17px; font-weight: 700; margin-bottom: 11px;
-        }
-        .client-name { font-size: 15px; font-weight: 600; margin-bottom: 3px; line-height: 1.3; }
-        .client-ref { font-size: 12px; color: var(--text-muted); margin-bottom: 9px; }
-        .client-info { font-size: 12px; color: var(--text-muted); display: flex; flex-direction: column; gap: 3px; }
-        .client-info span { display: flex; align-items: center; gap: 5px; }
-        .account-badges { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 10px; }
-        .badge {
-            font-size: 10px; padding: 2px 7px; border-radius: 20px;
-            background: var(--primary-light); color: var(--primary); font-weight: 500;
-        }
+/* ── VIEW TOGGLE ── */
+.view-toggle {
+    display: flex; gap: 2px; background: var(--bg-alt);
+    border: 1px solid var(--border); border-radius: var(--radius); padding: 3px;
+}
+.vt-btn {
+    padding: 7px 14px; border-radius: 8px; border: none;
+    background: none; cursor: pointer; font-size: 13px; font-weight: 500;
+    color: var(--text-muted); transition: all var(--transition); white-space: nowrap;
+    font-family: inherit;
+}
+.vt-btn.active {
+    background: var(--white); color: var(--primary);
+    box-shadow: var(--shadow-sm); font-weight: 600;
+}
 
-        /* ── LIST VIEW ── */
-        .client-list { display: flex; flex-direction: column; gap: 3px; }
-        .client-row {
-            background: var(--white); border-radius: 10px; padding: 10px 14px;
-            cursor: pointer; transition: all 0.15s; border: 1px solid var(--border);
-            display: flex; align-items: center; gap: 12px;
-        }
-        .client-row:hover { border-color: #bfdbfe; box-shadow: 0 2px 8px rgba(37,99,235,0.08); background: #fafcff; }
-        .cr-avatar {
-            width: 34px; height: 34px; border-radius: 8px; flex-shrink: 0;
-            background: var(--primary-light); color: var(--primary);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 12px; font-weight: 700;
-        }
-        .cr-main { min-width: 150px; flex-shrink: 0; }
-        .cr-name { font-size: 14px; font-weight: 600; line-height: 1.3; }
-        .cr-ref { font-size: 11px; color: var(--text-muted); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .cr-contact { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-        .cr-contact span { font-size: 12px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .cr-location { font-size: 12px; color: var(--text-muted); min-width: 90px; flex-shrink: 0; white-space: nowrap; }
-        .cr-badges { display: flex; flex-wrap: wrap; gap: 3px; justify-content: flex-end; min-width: 60px; }
+.stats {
+    font-size: 13px; color: var(--text-muted); margin-bottom: 16px;
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    font-weight: 500;
+}
+.active-letter-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--primary); color: #fff;
+    font-size: 12px; font-weight: 600; padding: 3px 10px 3px 10px;
+    border-radius: 20px;
+}
+.active-letter-badge button {
+    background: none; border: none; color: rgba(255,255,255,0.8); cursor: pointer;
+    font-size: 13px; line-height: 1; padding: 0 0 0 2px;
+    transition: color 0.15s;
+}
+.active-letter-badge button:hover { color: #fff; }
 
-        .empty-state { text-align: center; padding: 64px 24px; color: var(--text-muted); }
-        .empty-state .ei { font-size: 52px; margin-bottom: 14px; }
-        .empty-state h3 { font-size: 18px; color: var(--text); margin-bottom: 6px; }
+/* ── CONTENT AREA ── */
+.content-area { display: flex; gap: 12px; align-items: flex-start; }
+.clients-area { flex: 1; min-width: 0; }
 
-        /* ── MODAL ── */
-        .modal-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.45);
-            z-index: 1000; display: flex; align-items: flex-start; justify-content: center;
-            padding: 20px; overflow-y: auto; backdrop-filter: blur(3px);
-        }
-        .modal-overlay.hidden { display: none; }
-        .modal {
-            background: var(--white); border-radius: 16px;
-            width: 100%; max-width: 740px; padding: 30px;
-            position: relative; box-shadow: 0 25px 60px rgba(0,0,0,0.2); margin: auto;
-        }
-        .modal.modal-xl { max-width: 1020px; }
-        .modal-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 22px; }
-        .modal-title { font-size: 21px; font-weight: 700; }
-        .modal-subtitle { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
-        .close-btn {
-            background: none; border: none; cursor: pointer;
-            color: var(--text-muted); font-size: 18px; padding: 4px 6px;
-            border-radius: 6px; line-height: 1; flex-shrink: 0;
-        }
-        .close-btn:hover { background: var(--bg); color: var(--text); }
+/* ── ALPHA SIDEBAR ── */
+.alpha-sidebar {
+    width: 28px; position: sticky; top: 72px;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 1px; user-select: none; flex-shrink: 0;
+    padding: 6px 0; background: var(--white);
+    border: 1px solid var(--border); border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+.alpha-btn {
+    width: 22px; height: 18px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700; letter-spacing: 0;
+    border-radius: 5px; border: none; background: none;
+    transition: all 0.15s; line-height: 1; cursor: default;
+    color: #d1d5db;
+}
+.alpha-btn.has { color: var(--primary); cursor: pointer; }
+.alpha-btn.has:hover { background: var(--primary-light); }
+.alpha-btn.active { background: var(--primary) !important; color: #fff !important; }
+.alpha-sep { width: 14px; height: 1px; background: var(--border); margin: 2px 0; }
 
-        /* ── DETAIL VIEW ── */
-        .section-title {
-            font-size: 11px; font-weight: 600; color: var(--text-muted);
-            text-transform: uppercase; letter-spacing: 0.06em;
-            margin-bottom: 12px; display: flex; align-items: center; gap: 7px;
-        }
-        .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+/* ── LETTER SECTION ── */
+.letter-section { margin-bottom: 8px; }
+.letter-section-hd {
+    font-size: 11px; font-weight: 800; color: var(--primary);
+    padding: 3px 10px; margin-bottom: 8px;
+    background: var(--primary-light);
+    border-radius: 6px; display: inline-block;
+    letter-spacing: 0.05em;
+}
 
-        .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .detail-item { display: flex; flex-direction: column; gap: 3px; }
-        .detail-item.fw { grid-column: 1/-1; }
-        .dlabel { font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
-        .dvalue {
-            font-size: 13px; color: var(--text); padding: 6px 9px;
-            background: var(--bg); border-radius: 7px; word-break: break-word; line-height: 1.4;
-        }
-        .dvalue.empty { color: var(--text-muted); font-style: italic; }
-        .dvalue a { color: var(--primary); text-decoration: none; }
-        .dvalue a:hover { text-decoration: underline; }
+/* ── CARD GRID ── */
+.client-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+}
+.client-card {
+    background: var(--white); border-radius: var(--radius-lg); padding: 20px;
+    cursor: pointer; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+    position: relative; overflow: hidden;
+}
+.client-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--primary), #60a5fa);
+    opacity: 0; transition: opacity 0.25s;
+}
+.client-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    border-color: #bfdbfe;
+}
+.client-card:hover::before { opacity: 1; }
+.client-avatar {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: var(--primary-light); color: var(--primary);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 700; margin-bottom: 12px;
+    letter-spacing: -0.02em;
+}
+.client-name { font-size: 15px; font-weight: 600; margin-bottom: 3px; line-height: 1.3; color: var(--text); }
+.client-ref { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; }
+.client-info { font-size: 12px; color: var(--text-secondary); display: flex; flex-direction: column; gap: 4px; }
+.client-info span { display: flex; align-items: center; gap: 6px; }
+.client-info .info-icon { color: var(--text-muted); flex-shrink: 0; }
+.account-badges { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 12px; }
+.badge {
+    font-size: 10px; padding: 2px 8px; border-radius: 20px;
+    background: var(--bg-alt); color: var(--text-secondary); font-weight: 600;
+    border: 1px solid var(--border); letter-spacing: 0.01em;
+}
 
-        .notes-box {
-            background: var(--bg); border-radius: 8px; padding: 12px;
-            font-size: 13px; white-space: pre-wrap; line-height: 1.6; margin-bottom: 20px;
-        }
+/* ── LIST VIEW ── */
+.client-list { display: flex; flex-direction: column; gap: 3px; }
+.client-row {
+    background: var(--white); border-radius: var(--radius); padding: 10px 14px;
+    cursor: pointer; transition: all var(--transition); border: 1px solid var(--border);
+    display: flex; align-items: center; gap: 12px;
+}
+.client-row:hover { border-color: #bfdbfe; box-shadow: var(--shadow); background: #fafcff; }
+.cr-avatar {
+    width: 34px; height: 34px; border-radius: 9px; flex-shrink: 0;
+    background: var(--primary-light); color: var(--primary);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+}
+.cr-main { min-width: 150px; flex-shrink: 0; }
+.cr-name { font-size: 14px; font-weight: 600; line-height: 1.3; }
+.cr-ref { font-size: 11px; color: var(--text-muted); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cr-contact { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.cr-contact span { font-size: 12px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 4px; }
+.cr-location { font-size: 12px; color: var(--text-secondary); min-width: 90px; flex-shrink: 0; white-space: nowrap; display: flex; align-items: center; gap: 4px; }
+.cr-badges { display: flex; flex-wrap: wrap; gap: 3px; justify-content: flex-end; min-width: 60px; }
 
-        /* Account card in detail */
-        .acc-card {
-            background: #f8fafc; border: 1px solid var(--border);
-            border-radius: 10px; padding: 13px; margin-bottom: 10px;
-        }
-        .acc-type-label {
-            font-size: 11px; font-weight: 600; color: var(--primary);
-            text-transform: uppercase; letter-spacing: 0.05em;
-            margin-bottom: 9px; display: flex; align-items: center; gap: 5px;
-        }
-        .acc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .pwd-row { display: flex; align-items: center; gap: 4px; }
-        .pwd-val {
-            flex: 1; font-size: 13px; padding: 6px 9px;
-            background: var(--bg); border-radius: 7px; font-family: 'Courier New', monospace;
-            word-break: break-all;
-        }
-        .icon-btn {
-            background: none; border: none; cursor: pointer;
-            color: var(--text-muted); font-size: 13px; padding: 3px 5px;
-            border-radius: 5px; transition: color 0.15s;
-        }
-        .icon-btn:hover { color: var(--primary); background: var(--primary-light); }
-        .acc-note { font-size: 11px; color: var(--text-muted); margin-top: 7px; }
+.empty-state { text-align: center; padding: 80px 24px; color: var(--text-muted); }
+.empty-state .ei { font-size: 48px; margin-bottom: 16px; opacity: 0.4; }
+.empty-state h3 { font-size: 18px; color: var(--text); margin-bottom: 8px; font-weight: 600; }
+.empty-state p { font-size: 14px; line-height: 1.6; max-width: 400px; margin: 0 auto; }
 
-        /* Modal actions */
-        .modal-actions {
-            display: flex; gap: 8px; margin-top: 22px;
-            padding-top: 18px; border-top: 1px solid var(--border); flex-wrap: wrap;
-        }
-        .ml-auto { margin-left: auto; }
+/* ── MODAL ── */
+.modal-overlay {
+    position: fixed; inset: 0; background: rgba(15,23,42,0.5);
+    z-index: 1000; display: flex; align-items: flex-start; justify-content: center;
+    padding: 24px; overflow-y: auto; backdrop-filter: blur(4px);
+    animation: fadeIn 0.15s ease;
+}
+.modal-overlay.hidden { display: none; }
+.modal {
+    background: var(--white); border-radius: var(--radius-xl);
+    width: 100%; max-width: 740px; padding: 32px;
+    position: relative; box-shadow: var(--shadow-xl); margin: auto;
+    animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.modal.modal-xl { max-width: 1020px; }
+.modal-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; }
+.modal-title { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
+.modal-subtitle { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+.close-btn {
+    background: none; border: none; cursor: pointer;
+    color: var(--text-muted); font-size: 18px; padding: 6px 8px;
+    border-radius: 8px; line-height: 1; flex-shrink: 0;
+    transition: all var(--transition);
+}
+.close-btn:hover { background: var(--bg-alt); color: var(--text); }
 
-        /* ── FORM ── */
-        .form-section { margin-bottom: 22px; }
-        .form-section-title {
-            font-size: 11px; font-weight: 600; color: var(--text-muted);
-            text-transform: uppercase; letter-spacing: 0.06em;
-            padding-bottom: 8px; border-bottom: 1px solid var(--border); margin-bottom: 14px;
-        }
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .form-group { display: flex; flex-direction: column; gap: 4px; }
-        .form-group.fw { grid-column: 1/-1; }
-        .form-group.half2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .flabel { font-size: 12px; font-weight: 500; color: var(--text-muted); }
-        .finput, .ftextarea, .fselect {
-            padding: 8px 10px; border: 1px solid var(--border);
-            border-radius: 7px; font-size: 13px; color: var(--text);
-            background: var(--white); outline: none; transition: border-color 0.15s;
-            font-family: inherit; width: 100%;
-        }
-        .finput:focus, .ftextarea:focus, .fselect:focus {
-            border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
-        }
-        .ftextarea { resize: vertical; min-height: 75px; }
+/* ── DETAIL VIEW ── */
+.section-title {
+    font-size: 11px; font-weight: 700; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.08em;
+    margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+}
+.section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-        /* Account form items */
-        .acc-form-item {
-            background: #f8fafc; border: 1px solid var(--border);
-            border-radius: 10px; padding: 13px; margin-bottom: 9px;
-        }
-        .acc-form-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
-        .acc-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .pwd-input-wrap { position: relative; display: flex; align-items: center; }
-        .pwd-input-wrap .finput { padding-right: 34px; }
-        .pwd-eye {
-            position: absolute; right: 7px; background: none; border: none;
-            cursor: pointer; font-size: 14px; color: var(--text-muted); padding: 2px;
-        }
-        .pwd-eye:hover { color: var(--primary); }
-        .add-acc-btn {
-            width: 100%; padding: 10px; border: 2px dashed var(--border);
-            border-radius: 10px; background: none; color: var(--text-muted);
-            cursor: pointer; font-size: 13px; transition: all 0.15s; margin-top: 6px;
-        }
-        .add-acc-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 22px; }
+.detail-item { display: flex; flex-direction: column; gap: 3px; }
+.detail-item.fw { grid-column: 1/-1; }
+.dlabel { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.dvalue {
+    font-size: 13px; color: var(--text); padding: 8px 10px;
+    background: var(--bg); border-radius: 8px; word-break: break-word; line-height: 1.4;
+}
+.dvalue.empty { color: var(--text-muted); font-style: italic; }
+.dvalue a { color: var(--primary); text-decoration: none; font-weight: 500; }
+.dvalue a:hover { text-decoration: underline; }
 
-        /* ── DROPDOWN ── */
-        .dropdown { position: relative; }
-        .dropdown-menu {
-            position: absolute; right: 0; top: calc(100% + 5px);
-            background: var(--white); border: 1px solid var(--border);
-            border-radius: 10px; box-shadow: var(--shadow-lg); min-width: 200px;
-            z-index: 200; overflow: hidden;
-        }
-        .dropdown-menu.hidden { display: none; }
-        .dd-item {
-            width: 100%; padding: 10px 14px; background: none; border: none;
-            text-align: left; cursor: pointer; font-size: 13px; color: var(--text);
-            display: flex; align-items: center; gap: 8px; font-family: inherit;
-        }
-        .dd-item:hover { background: var(--bg); }
-        .dd-sep { height: 1px; background: var(--border); margin: 3px 0; }
-        .dd-label { padding: 6px 14px 2px; font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+.notes-box {
+    background: var(--bg); border-radius: var(--radius); padding: 14px;
+    font-size: 13px; white-space: pre-wrap; line-height: 1.6; margin-bottom: 22px;
+    color: var(--text-secondary);
+}
 
-        /* ── CONFIRM ── */
-        .confirm-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.45);
-            z-index: 2000; display: flex; align-items: center; justify-content: center;
-            backdrop-filter: blur(3px);
-        }
-        .confirm-overlay.hidden { display: none; }
-        .confirm-box {
-            background: var(--white); border-radius: 14px; padding: 26px 28px;
-            max-width: 360px; width: 90%; box-shadow: 0 20px 50px rgba(0,0,0,0.2); text-align: center;
-        }
-        .confirm-icon { font-size: 42px; margin-bottom: 12px; }
-        .confirm-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
-        .confirm-msg { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5; }
-        .confirm-actions { display: flex; gap: 10px; justify-content: center; }
+/* Account card in detail */
+.acc-card {
+    background: var(--bg); border: 1px solid var(--border-light);
+    border-radius: var(--radius); padding: 14px; margin-bottom: 10px;
+    transition: border-color var(--transition);
+}
+.acc-card:hover { border-color: var(--border); }
+.acc-type-label {
+    font-size: 11px; font-weight: 700; color: var(--primary);
+    text-transform: uppercase; letter-spacing: 0.06em;
+    margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
+}
+.acc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.pwd-row { display: flex; align-items: center; gap: 4px; }
+.pwd-val {
+    flex: 1; font-size: 13px; padding: 8px 10px;
+    background: var(--white); border-radius: 8px; font-family: 'SF Mono', 'Fira Code', monospace;
+    word-break: break-all; border: 1px solid var(--border-light);
+}
+.icon-btn {
+    background: none; border: none; cursor: pointer;
+    color: var(--text-muted); font-size: 14px; padding: 4px 5px;
+    border-radius: 6px; transition: all var(--transition); display: flex; align-items: center;
+}
+.icon-btn:hover { color: var(--primary); background: var(--primary-light); }
+.acc-note { font-size: 12px; color: var(--text-muted); margin-top: 8px; padding-left: 2px; }
 
-        /* ── TOAST ── */
-        .toast-wrap { position: fixed; bottom: 22px; right: 22px; z-index: 3000; display: flex; flex-direction: column; gap: 8px; }
-        .toast {
-            background: #1e293b; color: #fff; padding: 11px 16px; border-radius: 9px;
-            font-size: 13px; box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 7px;
-            animation: toastIn 0.2s ease;
-        }
-        .toast.ok { background: #166534; }
-        .toast.err { background: #991b1b; }
-        @keyframes toastIn { from { transform: translateX(110%); opacity: 0; } to { transform: none; opacity: 1; } }
+/* Modal actions */
+.modal-actions {
+    display: flex; gap: 8px; margin-top: 24px;
+    padding-top: 20px; border-top: 1px solid var(--border); flex-wrap: wrap;
+}
+.ml-auto { margin-left: auto; }
 
-        /* ── IMPORT TABLE MODAL ── */
-        .import-step { display: none; }
-        .import-step.active { display: block; }
+/* ── FORM ── */
+.form-section { margin-bottom: 24px; }
+.form-section-title {
+    font-size: 11px; font-weight: 700; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.08em;
+    padding-bottom: 10px; border-bottom: 1px solid var(--border); margin-bottom: 16px;
+}
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-group.fw { grid-column: 1/-1; }
+.form-group.half2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.flabel { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+.finput, .ftextarea, .fselect {
+    padding: 9px 12px; border: 1px solid var(--border);
+    border-radius: 8px; font-size: 13px; color: var(--text);
+    background: var(--white); outline: none; transition: all var(--transition);
+    font-family: inherit; width: 100%;
+}
+.finput:focus, .ftextarea:focus, .fselect:focus {
+    border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-ring);
+}
+.finput::placeholder, .ftextarea::placeholder { color: var(--text-muted); }
+.ftextarea { resize: vertical; min-height: 80px; }
 
-        .import-drop-zone {
-            border: 2px dashed var(--border); border-radius: 12px;
-            padding: 48px 24px; text-align: center; cursor: pointer;
-            transition: all 0.2s; background: #fafbfc;
-        }
-        .import-drop-zone:hover, .import-drop-zone.drag-over {
-            border-color: var(--primary); background: var(--primary-light);
-        }
-        .import-drop-zone .drop-icon { font-size: 48px; margin-bottom: 14px; }
-        .import-drop-zone h3 { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
-        .import-drop-zone p { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
+/* Account form items */
+.acc-form-item {
+    background: var(--bg); border: 1px solid var(--border-light);
+    border-radius: var(--radius); padding: 14px; margin-bottom: 10px;
+}
+.acc-form-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.acc-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.pwd-input-wrap { position: relative; display: flex; align-items: center; }
+.pwd-input-wrap .finput { padding-right: 36px; }
+.pwd-eye {
+    position: absolute; right: 8px; background: none; border: none;
+    cursor: pointer; color: var(--text-muted); padding: 3px;
+    border-radius: 4px; transition: color var(--transition);
+    display: flex; align-items: center;
+}
+.pwd-eye:hover { color: var(--primary); }
+.add-acc-btn {
+    width: 100%; padding: 12px; border: 2px dashed var(--border);
+    border-radius: var(--radius); background: none; color: var(--text-muted);
+    cursor: pointer; font-size: 13px; font-weight: 600; font-family: inherit;
+    transition: all var(--transition); margin-top: 8px;
+}
+.add-acc-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
 
-        .import-info-box {
-            background: #fffbeb; border: 1px solid #fde68a; border-radius: 10px;
-            padding: 13px 15px; margin-top: 16px; font-size: 12px; color: #92400e; line-height: 1.6;
-        }
-        .import-info-box strong { color: #78350f; }
+/* ── DROPDOWN ── */
+.dropdown { position: relative; }
+.dropdown-menu {
+    position: absolute; right: 0; top: calc(100% + 6px);
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); min-width: 210px;
+    z-index: 200; overflow: hidden;
+    animation: slideDown 0.15s ease;
+}
+.dropdown-menu.hidden { display: none; }
+.dd-item {
+    width: 100%; padding: 10px 16px; background: none; border: none;
+    text-align: left; cursor: pointer; font-size: 13px; color: var(--text-secondary);
+    display: flex; align-items: center; gap: 8px; font-family: inherit;
+    transition: all var(--transition);
+}
+.dd-item:hover { background: var(--bg); color: var(--text); }
+.dd-sep { height: 1px; background: var(--border); margin: 4px 0; }
+.dd-label {
+    padding: 8px 16px 4px; font-size: 10px; font-weight: 700;
+    color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em;
+}
 
-        .col-map-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 10px; margin-bottom: 18px;
-        }
-        .col-map-item { display: flex; flex-direction: column; gap: 4px; }
-        .col-map-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
-        .col-map-item select { padding: 7px 9px; border: 1px solid var(--border); border-radius: 7px; font-size: 12px; background: var(--white); color: var(--text); outline: none; }
-        .col-map-item select:focus { border-color: var(--primary); }
-        .col-map-item select.mapped { border-color: #22c55e; background: #f0fdf4; }
+/* ── CONFIRM ── */
+.confirm-overlay {
+    position: fixed; inset: 0; background: rgba(15,23,42,0.5);
+    z-index: 2000; display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(4px); animation: fadeIn 0.15s ease;
+}
+.confirm-overlay.hidden { display: none; }
+.confirm-box {
+    background: var(--white); border-radius: var(--radius-xl); padding: 32px;
+    max-width: 380px; width: 90%; box-shadow: var(--shadow-xl); text-align: center;
+    animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.confirm-icon {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: var(--danger-light); color: var(--danger);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; margin: 0 auto 16px;
+}
+.confirm-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+.confirm-msg { font-size: 13px; color: var(--text-secondary); margin-bottom: 24px; line-height: 1.6; }
+.confirm-actions { display: flex; gap: 10px; justify-content: center; }
 
-        .preview-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border); max-height: 340px; overflow-y: auto; }
-        .preview-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-        .preview-table th {
-            background: #f8fafc; padding: 9px 12px; text-align: left;
-            font-weight: 600; color: var(--text-muted); font-size: 11px;
-            text-transform: uppercase; letter-spacing: 0.04em;
-            position: sticky; top: 0; border-bottom: 1px solid var(--border);
-            white-space: nowrap;
-        }
-        .preview-table td {
-            padding: 8px 12px; border-bottom: 1px solid #f1f5f9;
-            color: var(--text); max-width: 180px;
-            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-        }
-        .preview-table tr:last-child td { border-bottom: none; }
-        .preview-table tr:hover td { background: #f8fafc; }
+/* ── TOAST ── */
+.toast-wrap { position: fixed; bottom: 24px; right: 24px; z-index: 3000; display: flex; flex-direction: column; gap: 8px; }
+.toast {
+    background: var(--text); color: #fff; padding: 12px 18px; border-radius: var(--radius);
+    font-size: 13px; font-weight: 500; box-shadow: var(--shadow-lg);
+    display: flex; align-items: center; gap: 8px;
+    animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    max-width: 360px;
+}
+.toast.ok { background: #065f46; }
+.toast.err { background: #991b1b; }
+.toast-exit { animation: toastOut 0.2s ease forwards; }
 
-        .import-summary {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 18px;
-        }
-        .sum-card { background: var(--bg); border-radius: 10px; padding: 14px; text-align: center; }
-        .sum-num { font-size: 26px; font-weight: 700; color: var(--primary); }
-        .sum-lbl { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+/* ── IMPORT TABLE MODAL ── */
+.import-step { display: none; }
+.import-step.active { display: block; }
 
-        .step-header { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
-        .step-pill {
-            background: var(--primary-light); color: var(--primary);
-            font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px;
-            white-space: nowrap;
-        }
-        .step-title { font-size: 16px; font-weight: 600; }
-        .step-sub { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+.import-drop-zone {
+    border: 2px dashed var(--border); border-radius: var(--radius-lg);
+    padding: 56px 24px; text-align: center; cursor: pointer;
+    transition: all 0.25s; background: var(--bg);
+}
+.import-drop-zone:hover, .import-drop-zone.drag-over {
+    border-color: var(--primary); background: var(--primary-light);
+}
+.import-drop-zone .drop-icon { font-size: 44px; margin-bottom: 16px; opacity: 0.5; }
+.import-drop-zone h3 { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+.import-drop-zone p { font-size: 13px; color: var(--text-muted); margin-bottom: 18px; }
 
-        .merge-options { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
-        .merge-opt {
-            flex: 1; min-width: 180px; border: 2px solid var(--border); border-radius: 10px;
-            padding: 14px; cursor: pointer; transition: all 0.15s; background: var(--white);
-        }
-        .merge-opt:hover { border-color: var(--primary); background: var(--primary-light); }
-        .merge-opt.selected { border-color: var(--primary); background: var(--primary-light); }
-        .merge-opt-icon { font-size: 22px; margin-bottom: 6px; }
-        .merge-opt-title { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
-        .merge-opt-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+.import-info-box {
+    background: var(--warning-light); border: 1px solid #fde68a; border-radius: var(--radius);
+    padding: 14px 16px; margin-top: 18px; font-size: 12px; color: #92400e; line-height: 1.7;
+}
+.import-info-box strong { color: #78350f; }
 
-        /* ── PIN BUTTON ── */
-        .pin-btn {
-            position: absolute; top: 10px; right: 10px;
-            background: none; border: none; cursor: pointer;
-            font-size: 15px; padding: 3px 5px; border-radius: 6px;
-            opacity: 0; transition: all 0.15s; z-index: 5;
-            line-height: 1;
-        }
-        .client-card:hover .pin-btn, .client-row:hover .pin-btn-row { opacity: 0.5; }
-        .pin-btn:hover, .pin-btn-row:hover { opacity: 1 !important; transform: scale(1.15); }
-        .pin-btn.pinned, .pin-btn-row.pinned { opacity: 1; }
-        .pin-btn-row {
-            background: none; border: none; cursor: pointer;
-            font-size: 14px; padding: 3px 5px; border-radius: 6px;
-            opacity: 0; transition: all 0.15s; line-height: 1; flex-shrink: 0;
-        }
-        .pin-btn-row.pinned { opacity: 1; }
-        .pinned-section {
-            margin-bottom: 16px; padding: 14px 14px 8px;
-            background: linear-gradient(135deg, #fffbeb, #fef3c7);
-            border: 1px solid #fde68a; border-radius: 12px;
-        }
-        .pinned-section-hd {
-            font-size: 11px; font-weight: 800; color: #92400e;
-            padding: 3px 10px; margin-bottom: 10px;
-            display: inline-flex; align-items: center; gap: 6px;
-            background: #fde68a; border-radius: 6px; letter-spacing: 0.04em;
-        }
+.col-map-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px; margin-bottom: 18px;
+}
+.col-map-item { display: flex; flex-direction: column; gap: 4px; }
+.col-map-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+.col-map-item select {
+    padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px;
+    font-size: 12px; background: var(--white); color: var(--text); outline: none;
+    font-family: inherit; transition: all var(--transition);
+}
+.col-map-item select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-ring); }
+.col-map-item select.mapped { border-color: var(--success); background: var(--success-light); }
 
-        /* ── FORCE PASSWORD CHANGE ── */
-        .force-pwd-overlay {
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.6);
-            z-index: 5000; display: flex; align-items: center; justify-content: center;
-            padding: 20px; backdrop-filter: blur(5px);
-        }
-        .force-pwd-overlay.hidden { display: none; }
-        .force-pwd-box {
-            background: white; border-radius: 20px; padding: 36px;
-            max-width: 400px; width: 100%;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.3); text-align: center;
-        }
+.preview-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border); max-height: 340px; overflow-y: auto; }
+.preview-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.preview-table th {
+    background: var(--bg); padding: 10px 12px; text-align: left;
+    font-weight: 700; color: var(--text-muted); font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.04em;
+    position: sticky; top: 0; border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+}
+.preview-table td {
+    padding: 8px 12px; border-bottom: 1px solid var(--border-light);
+    color: var(--text); max-width: 180px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.preview-table tr:last-child td { border-bottom: none; }
+.preview-table tr:hover td { background: var(--bg); }
 
-        /* ── SETTINGS USER LIST ── */
-        .settings-user-card {
-            border: 1px solid var(--border); border-radius: 10px; padding: 13px;
-            display: flex; align-items: center; gap: 12px;
-        }
-        .settings-user-card.active { background: #f0fdf4; }
-        .settings-user-card.disabled { background: #fef2f2; }
+.import-summary {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;
+}
+.sum-card { background: var(--bg); border-radius: var(--radius); padding: 16px; text-align: center; border: 1px solid var(--border-light); }
+.sum-num { font-size: 28px; font-weight: 800; color: var(--primary); letter-spacing: -0.03em; }
+.sum-lbl { font-size: 12px; color: var(--text-muted); margin-top: 4px; font-weight: 500; }
 
-        /* ── RESPONSIVE ── */
-        @media (max-width: 700px) {
-            .cr-contact, .cr-location { display: none; }
-            .cr-main { min-width: 0; flex: 1; }
-            .alpha-sidebar { display: none; }
-            .user-badge { display: none; }
-        }
-        @media (max-width: 580px) {
-            .detail-grid, .form-grid, .acc-row, .acc-form-row { grid-template-columns: 1fr; }
-            .form-group.half2 { grid-template-columns: 1fr 1fr; }
-            .modal { padding: 20px; }
-            .main { padding: 14px; }
-            .header { padding: 12px 16px; }
-            .import-summary { grid-template-columns: 1fr 1fr; }
-        }
+.step-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.step-pill {
+    background: var(--primary-light); color: var(--primary);
+    font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px;
+    white-space: nowrap; letter-spacing: 0.02em;
+}
+.step-title { font-size: 16px; font-weight: 700; }
+.step-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+.merge-options { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+.merge-opt {
+    flex: 1; min-width: 180px; border: 2px solid var(--border); border-radius: var(--radius);
+    padding: 16px; cursor: pointer; transition: all var(--transition); background: var(--white);
+}
+.merge-opt:hover { border-color: #93c5fd; }
+.merge-opt.selected { border-color: var(--primary); background: var(--primary-light); }
+.merge-opt-icon { font-size: 20px; margin-bottom: 8px; }
+.merge-opt-title { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+.merge-opt-desc { font-size: 11px; color: var(--text-muted); line-height: 1.5; }
+
+/* ── PIN BUTTON ── */
+.pin-btn {
+    position: absolute; top: 10px; right: 10px;
+    background: var(--white); border: 1px solid var(--border); cursor: pointer;
+    width: 28px; height: 28px; border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: all 0.2s; z-index: 5;
+    color: var(--text-muted);
+}
+.client-card:hover .pin-btn, .client-row:hover .pin-btn-row { opacity: 0.7; }
+.pin-btn:hover, .pin-btn-row:hover { opacity: 1 !important; color: var(--primary); border-color: var(--primary); background: var(--primary-light); }
+.pin-btn.pinned, .pin-btn-row.pinned { opacity: 1; color: var(--warning); border-color: var(--warning); background: var(--warning-light); }
+.pin-btn-row {
+    background: var(--white); border: 1px solid var(--border); cursor: pointer;
+    width: 28px; height: 28px; border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: all 0.2s; flex-shrink: 0;
+    color: var(--text-muted);
+}
+.pin-btn-row.pinned { opacity: 1; color: var(--warning); border-color: var(--warning); background: var(--warning-light); }
+.pinned-section {
+    margin-bottom: 18px; padding: 16px 16px 10px;
+    background: linear-gradient(135deg, #fffbeb, #fef3c7);
+    border: 1px solid #fde68a; border-radius: var(--radius-lg);
+}
+.pinned-section-hd {
+    font-size: 11px; font-weight: 800; color: #92400e;
+    padding: 4px 12px; margin-bottom: 12px;
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(253,230,138,0.6); border-radius: 6px; letter-spacing: 0.06em;
+}
+
+/* ── FORCE PASSWORD CHANGE ── */
+.force-pwd-overlay {
+    position: fixed; inset: 0;
+    background: rgba(15,23,42,0.6);
+    z-index: 5000; display: flex; align-items: center; justify-content: center;
+    padding: 20px; backdrop-filter: blur(8px);
+    animation: fadeIn 0.3s ease;
+}
+.force-pwd-overlay.hidden { display: none; }
+.force-pwd-box {
+    background: white; border-radius: var(--radius-xl); padding: 40px;
+    max-width: 420px; width: 100%;
+    box-shadow: var(--shadow-xl); text-align: center;
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── SETTINGS USER LIST ── */
+.settings-user-card {
+    border: 1px solid var(--border); border-radius: var(--radius); padding: 14px;
+    display: flex; align-items: center; gap: 14px;
+    transition: all var(--transition);
+}
+.settings-user-card.active { background: var(--success-light); border-color: #a7f3d0; }
+.settings-user-card.disabled { background: var(--danger-light); border-color: #fecaca; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 700px) {
+    .cr-contact, .cr-location { display: none; }
+    .cr-main { min-width: 0; flex: 1; }
+    .alpha-sidebar { display: none; }
+    .user-badge { display: none; }
+    .header { padding: 0 16px; }
+    .main { padding: 16px; }
+}
+@media (max-width: 580px) {
+    .detail-grid, .form-grid, .acc-row, .acc-form-row { grid-template-columns: 1fr; }
+    .form-group.half2 { grid-template-columns: 1fr 1fr; }
+    .modal { padding: 24px 20px; border-radius: var(--radius-lg); }
+    .header { padding: 0 12px; }
+    .import-summary { grid-template-columns: 1fr 1fr; }
+    .client-grid { grid-template-columns: 1fr; }
+}
+
     </style>
-    <!-- Firebase v10 compat -->
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 </head>
 <body>
-
-<!-- ══════════════════════════════════════════ -->
-<!-- LOGIN OVERLAY -->
-<!-- ══════════════════════════════════════════ -->
-<div id="loginOverlay" class="login-overlay">
-    <div class="login-box">
-        <div class="login-logo">
-            <img class="logo-big" src="https://www.medeatelemedicina.com/wp-content/uploads/2024/06/Logo-MedEA-Telemedicina.svg" alt="MedEA Telemedicina">
-            <div class="login-title">Access Clienti</div>
-            <div class="login-subtitle">Accedi con le tue credenziali</div>
-        </div>
-        <div class="login-error" id="loginError"></div>
-        <div class="login-form">
-            <div class="form-group">
-                <label class="flabel">Username</label>
-                <input class="finput" id="loginUser" type="text" placeholder="il tuo username" autocomplete="username" onkeydown="if(event.key==='Enter') document.getElementById('loginPwd').focus()">
+    <!-- LOGIN OVERLAY -->
+    <div id="loginOverlay" class="login-overlay">
+        <div class="login-box">
+            <div class="login-logo">
+                <img src="https://www.medeatelemedicina.com/wp-content/uploads/2024/06/Logo-MedEA-Telemedicina.svg" alt="MedEA" class="logo-big">
+                <div class="login-title">Access Clienti</div>
+                <div class="login-subtitle">Inserisci le tue credenziali per accedere</div>
             </div>
-            <div class="form-group">
-                <label class="flabel">Password</label>
-                <div class="pwd-input-wrap">
-                    <input class="finput" id="loginPwd" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter') doLogin()">
-                    <button type="button" class="pwd-eye" onclick="toggleLoginPwd()">👁️</button>
+            <div id="loginError" class="login-error"></div>
+            <div class="login-form">
+                <div class="form-group">
+                    <label class="flabel" for="loginUser">Username</label>
+                    <input type="text" id="loginUser" class="finput" placeholder="es. a.marino" autocomplete="username" onkeydown="if(event.key==='Enter')doLogin()">
                 </div>
-            </div>
-            <button class="btn btn-primary" id="loginBtn" style="width:100%;justify-content:center;padding:11px" onclick="doLogin()">
-                🔐 Accedi
-            </button>
-        </div>
-    </div>
-</div>
-
-<!-- ══════════════════════════════════════════ -->
-<!-- APP (hidden until login) -->
-<!-- ══════════════════════════════════════════ -->
-<div id="appWrap" style="display:none">
-
-<!-- HEADER -->
-<div class="header">
-    <div class="header-left">
-        <img class="logo-img" src="https://www.medeatelemedicina.com/wp-content/uploads/2024/06/Logo-MedEA-Telemedicina.svg" alt="MedEA">
-        <h1>Access Clienti</h1>
-    </div>
-    <div class="header-right">
-        <div id="userBadge" class="user-badge">
-            <span id="userBadgeName"></span>
-            <span id="userBadgeRole" class="user-role-pill"></span>
-        </div>
-        <button class="btn btn-outline" onclick="changeMyPassword()">🔑 Cambia Password</button>
-        <button class="btn btn-outline" id="settingsBtn" onclick="openSettings()" style="display:none">⚙️ Impostazioni</button>
-        <div class="dropdown" id="ddWrapper" style="display:none">
-            <button class="btn btn-outline" id="ddBtn" onclick="toggleDD()">📂 Gestione dati</button>
-            <div class="dropdown-menu hidden" id="ddMenu">
-                <div class="dd-label">Importa</div>
-                <button class="dd-item" onclick="openTableImport()">📊 Importa da CSV / Excel</button>
-                <button class="dd-item" onclick="triggerImportJSON()">📥 Importa da JSON (backup)</button>
-                <div class="dd-sep"></div>
-                <div class="dd-label">Esporta</div>
-                <button class="dd-item" onclick="exportData()">📤 Esporta JSON (backup)</button>
-                <button class="dd-item" onclick="exportCSV()">📋 Esporta CSV</button>
-            </div>
-        </div>
-        <button class="btn btn-primary" onclick="openAdd()">＋ Nuovo Cliente</button>
-        <button class="btn btn-outline" onclick="doLogout()">🚪 Esci</button>
-    </div>
-</div>
-
-<!-- MAIN -->
-<div class="main">
-    <div class="toolbar">
-        <div class="search-wrapper">
-            <span class="search-icon">🔍</span>
-            <input type="text" class="search-input" id="searchInput" placeholder="Cerca cliente, referente, città, email…" oninput="renderGrid()">
-        </div>
-        <div class="view-toggle">
-            <button class="vt-btn active" id="vt-cards" onclick="setView('cards')" title="Vista schede">⊞ Schede</button>
-            <button class="vt-btn" id="vt-list" onclick="setView('list')" title="Vista elenco">≡ Elenco</button>
-        </div>
-    </div>
-    <div class="stats" id="statsBar"></div>
-    <div class="content-area">
-        <div class="clients-area" id="clientsArea"></div>
-        <div class="alpha-sidebar" id="alphaSidebar"></div>
-    </div>
-</div>
-
-</div><!-- /appWrap -->
-
-<!-- DETAIL MODAL -->
-<div class="modal-overlay hidden" id="detailModal" onclick="overlayClick(event,'detailModal')">
-    <div class="modal">
-        <div class="modal-header">
-            <div>
-                <div class="modal-title" id="dTitle">—</div>
-                <div class="modal-subtitle" id="dSub"></div>
-            </div>
-            <button class="close-btn" onclick="closeModal('detailModal')">✕</button>
-        </div>
-        <div id="dBody"></div>
-        <div class="modal-actions">
-            <button class="btn btn-primary" onclick="editFromDetail()">✏️ Modifica</button>
-            <button class="btn btn-outline" id="detailPinBtn" onclick="togglePin(currentId)">📌 Fissa in alto</button>
-            <button class="btn btn-danger ml-auto" id="detailDeleteBtn" onclick="askDelete()">🗑️ Elimina</button>
-        </div>
-    </div>
-</div>
-
-<!-- EDIT MODAL -->
-<div class="modal-overlay hidden" id="editModal" onclick="overlayClick(event,'editModal')">
-    <div class="modal">
-        <div class="modal-header">
-            <div class="modal-title" id="editTitle">Nuovo Cliente</div>
-            <button class="close-btn" onclick="closeModal('editModal')">✕</button>
-        </div>
-        <div id="editBody"></div>
-        <div class="modal-actions">
-            <button class="btn btn-primary" onclick="saveClient()">💾 Salva Cliente</button>
-            <button class="btn btn-outline" onclick="closeModal('editModal')">Annulla</button>
-        </div>
-    </div>
-</div>
-
-<!-- ── IMPORT TABLE MODAL ── -->
-<div class="modal-overlay hidden" id="importModal" onclick="overlayClick(event,'importModal')">
-    <div class="modal modal-xl">
-        <div class="modal-header">
-            <div>
-                <div class="modal-title">📊 Importa Clienti da Tabella</div>
-                <div class="modal-subtitle" id="importSubtitle">Carica un file CSV o Excel esportato da qualsiasi programma</div>
-            </div>
-            <button class="close-btn" onclick="closeModal('importModal')">✕</button>
-        </div>
-        <div id="importBody">
-
-            <!-- STEP 1: Upload -->
-            <div class="import-step active" id="importStep1">
-                <div class="step-header">
-                    <span class="step-pill">Passo 1 di 3</span>
-                    <div>
-                        <div class="step-title">Carica il file</div>
-                        <div class="step-sub">Trascina o seleziona un file CSV o Excel</div>
+                <div class="form-group">
+                    <label class="flabel" for="loginPwd">Password</label>
+                    <div class="pwd-input-wrap">
+                        <input type="password" id="loginPwd" class="finput" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+                        <button type="button" class="pwd-eye" onclick="toggleLoginPwd()"><span class="ic" style="font-size:16px"><svg viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></span></button>
                     </div>
                 </div>
-
-                <div class="import-drop-zone" id="dropZone" onclick="document.getElementById('importTableFile').click()"
-                     ondragover="dzOver(event)" ondragleave="dzLeave(event)" ondrop="dzDrop(event)">
-                    <div class="drop-icon">📂</div>
-                    <h3>Trascina qui il tuo file</h3>
-                    <p>oppure clicca per sfogliare</p>
-                    <button class="btn btn-primary" type="button">Scegli file</button>
-                </div>
-
-                <div class="import-info-box">
-                    <strong>📌 Come preparare il file:</strong><br>
-                    • Esporta la tua tabella come <strong>CSV</strong> (.csv) da Excel, Google Sheets o qualsiasi altro programma<br>
-                    • Assicurati che la <strong>prima riga contenga le intestazioni</strong> (es. Cliente, Email, Telefono…)<br>
-                    • Per gli account: aggiungi colonne come <strong>MEGA_user</strong>, <strong>MEGA_pass</strong>, <strong>ARUBA_user</strong>, <strong>ARUBA_pass</strong>, ecc.<br>
-                    • Puoi anche usare colonne generiche: il sistema riconoscerà automaticamente i campi
-                </div>
+                <button id="loginBtn" class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;font-size:14px;margin-top:4px;" onclick="doLogin()">Accedi</button>
             </div>
-
-            <!-- STEP 2: Column mapping -->
-            <div class="import-step" id="importStep2">
-                <div class="step-header">
-                    <span class="step-pill">Passo 2 di 3</span>
-                    <div>
-                        <div class="step-title">Abbina le colonne</div>
-                        <div class="step-sub" id="step2Sub">Il sistema ha riconosciuto automaticamente i campi — verifica e correggi se necessario</div>
-                    </div>
-                </div>
-
-                <div id="colMapGrid" class="col-map-grid"></div>
-
-                <div class="section-title" style="margin-top:10px">👁️ Anteprima dati (prime 5 righe)</div>
-                <div class="preview-wrap">
-                    <table class="preview-table" id="previewTable"></table>
-                </div>
-            </div>
-
-            <!-- STEP 3: Confirm import -->
-            <div class="import-step" id="importStep3">
-                <div class="step-header">
-                    <span class="step-pill">Passo 3 di 3</span>
-                    <div>
-                        <div class="step-title">Conferma importazione</div>
-                        <div class="step-sub">Scegli come gestire i dati già presenti</div>
-                    </div>
-                </div>
-
-                <div class="import-summary" id="importSummary"></div>
-
-                <div class="merge-options">
-                    <div class="merge-opt selected" id="mopt_add" onclick="selectMerge('add')">
-                        <div class="merge-opt-icon">➕</div>
-                        <div class="merge-opt-title">Aggiungi ai clienti esistenti</div>
-                        <div class="merge-opt-desc">I nuovi clienti vengono aggiunti. Quelli già presenti (stesso nome) vengono aggiornati.</div>
-                    </div>
-                    <div class="merge-opt" id="mopt_replace" onclick="selectMerge('replace')">
-                        <div class="merge-opt-icon">🔄</div>
-                        <div class="merge-opt-title">Sostituisci tutto</div>
-                        <div class="merge-opt-desc">Tutti i clienti esistenti vengono eliminati e sostituiti con quelli del file.</div>
-                    </div>
-                </div>
-
-                <div class="section-title">📋 Anteprima importazione completa</div>
-                <div class="preview-wrap" style="max-height:280px">
-                    <table class="preview-table" id="finalPreviewTable"></table>
-                </div>
-            </div>
-
-        </div>
-        <div class="modal-actions" id="importActions">
-            <button class="btn btn-outline" id="importBackBtn" onclick="importBack()" style="display:none">← Indietro</button>
-            <button class="btn btn-primary ml-auto" id="importNextBtn" onclick="importNext()">Avanti →</button>
         </div>
     </div>
-</div>
 
-<!-- ══════════════════════════════════════════ -->
-<!-- SETTINGS MODAL (admin only) -->
-<!-- ══════════════════════════════════════════ -->
-<div class="modal-overlay hidden" id="settingsModal" onclick="overlayClick(event,'settingsModal')">
-    <div class="modal">
-        <div class="modal-header">
-            <div>
-                <div class="modal-title">⚙️ Impostazioni — Gestione Utenti</div>
-                <div class="modal-subtitle">Crea e gestisci gli operatori del sistema</div>
+    <!-- FORCE PASSWORD CHANGE OVERLAY -->
+    <div id="forcePwdOverlay" class="force-pwd-overlay hidden">
+        <div class="force-pwd-box">
+            <div style="width:56px;height:56px;border-radius:50%;background:var(--warning-light);color:var(--warning);display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 16px;">
+                <span class="ic"><svg viewBox="0 0 24 24"><path d="m21 2-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.78 7.78 5.5 5.5 0 0 1 7.78-7.78Zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg></span>
             </div>
-            <button class="close-btn" onclick="closeModal('settingsModal')">✕</button>
-        </div>
-        <div id="settingsBody">
-            <p style="color:var(--text-muted);font-size:13px">⏳ Caricamento…</p>
+            <h2 style="font-size:20px;font-weight:700;margin-bottom:6px;">Imposta la tua password</h2>
+            <p style="font-size:13px;color:var(--text-secondary);margin-bottom:24px;line-height:1.6;">Per sicurezza, scegli una nuova password personale.<br>Minimo 6 caratteri.</p>
+            <div style="display:flex;flex-direction:column;gap:14px;text-align:left;">
+                <div class="form-group">
+                    <label class="flabel">Nuova password</label>
+                    <input type="password" id="forceNewPwd" class="finput" placeholder="Nuova password" onkeydown="if(event.key==='Enter')document.getElementById('forceNewPwd2').focus()">
+                </div>
+                <div class="form-group">
+                    <label class="flabel">Conferma password</label>
+                    <input type="password" id="forceNewPwd2" class="finput" placeholder="Ripeti password" onkeydown="if(event.key==='Enter')doForceChangePwd()">
+                </div>
+                <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;font-size:14px;" onclick="doForceChangePwd()">Salva password</button>
+            </div>
         </div>
     </div>
-</div>
 
-<!-- CONFIRM DIALOG -->
-<div class="confirm-overlay hidden" id="confirmDlg">
-    <div class="confirm-box">
-        <div class="confirm-icon">⚠️</div>
-        <div class="confirm-title">Elimina Cliente</div>
-        <div class="confirm-msg" id="confirmMsg"></div>
-        <div class="confirm-actions">
-            <button class="btn btn-danger" onclick="doDelete()">Sì, Elimina</button>
-            <button class="btn btn-outline" onclick="closeConfirm()">Annulla</button>
+    <!-- HEADER -->
+    <div id="appUI" style="display:none;">
+        <div class="header">
+            <div class="header-left">
+                <img src="https://www.medeatelemedicina.com/wp-content/uploads/2024/06/Logo-MedEA-Telemedicina.svg" alt="MedEA" class="logo-img">
+                <h1>Access Clienti</h1>
+            </div>
+            <div class="header-right">
+                <span id="userBadge" class="user-badge"></span>
+                <button class="btn btn-ghost btn-icon" title="Cambia password" onclick="openChangePwd()"><span class="ic" style="font-size:16px;"><svg viewBox="0 0 24 24"><path d="m21 2-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.78 7.78 5.5 5.5 0 0 1 7.78-7.78Zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg></span></button>
+                <button id="settingsBtn" class="btn btn-ghost btn-icon" style="display:none;" title="Impostazioni" onclick="switchTab('settings')"><span class="ic" style="font-size:16px;"><svg viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span></button>
+                <button class="btn btn-ghost btn-icon" title="Esci" onclick="doLogout()"><span class="ic" style="font-size:16px;"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span></button>
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="main">
+            <!-- TAB: CLIENTS -->
+            <div id="tabClients">
+                <div class="toolbar">
+                    <div class="search-wrapper">
+                        <span class="search-icon ic" style="font-size:16px;"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
+                        <input type="text" class="search-input" id="searchInput" placeholder="Cerca clienti per nome, codice, citt\u00e0..." oninput="onSearch()">
+                    </div>
+                    <div class="view-toggle">
+                        <button class="vt-btn active" id="vtGrid" onclick="setView('grid')"><span class="ic" style="font-size:14px;"><svg viewBox="0 0 24 24"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/></svg></span> Schede</button>
+                        <button class="vt-btn" id="vtList" onclick="setView('list')"><span class="ic" style="font-size:14px;"><svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></span> Elenco</button>
+                    </div>
+                    <button class="btn btn-primary" onclick="openNew()"><span class="ic"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></svg></span> Nuovo</button>
+                    <div class="dropdown" id="ddData" style="display:none;">
+                        <button class="btn btn-outline" onclick="toggleDD()"><span class="ic"><svg viewBox="0 0 24 24"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg></span> Gestione dati <span class="ic" style="font-size:14px;"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span></button>
+                        <div class="dropdown-menu hidden" id="ddMenu">
+                            <div class="dd-label">Importa</div>
+                            <button class="dd-item" onclick="importCSV()"><span class="ic"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span> Importa CSV</button>
+                            <button class="dd-item" onclick="importJSON()"><span class="ic"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span> Importa JSON</button>
+                            <button class="dd-item" onclick="importExcel()"><span class="ic"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span> Importa Excel</button>
+                            <div class="dd-sep"></div>
+                            <div class="dd-label">Esporta</div>
+                            <button class="dd-item" onclick="exportCSV()"><span class="ic"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span> Esporta CSV</button>
+                            <button class="dd-item" onclick="exportJSON()"><span class="ic"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span> Esporta JSON</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="alphaStats" class="stats"></div>
+                <div class="content-area">
+                    <div class="clients-area" id="clientsArea"></div>
+                    <div class="alpha-sidebar" id="alphaSidebar"></div>
+                </div>
+            </div>
+
+            <!-- TAB: SETTINGS -->
+            <div id="tabSettings" style="display:none;"></div>
         </div>
     </div>
-</div>
 
-<!-- FORCE PASSWORD CHANGE OVERLAY -->
-<div class="force-pwd-overlay hidden" id="forcePwdOverlay">
-    <div class="force-pwd-box">
-        <img src="https://www.medeatelemedicina.com/wp-content/uploads/2024/06/Logo-MedEA-Telemedicina.svg" alt="MedEA" style="height:50px;margin-bottom:16px">
-        <div style="font-size:18px;font-weight:600;margin-bottom:8px">Imposta la tua password</div>
-        <div style="font-size:13px;color:var(--text-muted);margin-bottom:20px;line-height:1.5">
-            Benvenuto! Al primo accesso devi impostare una password personale.
-        </div>
-        <div style="display:flex;flex-direction:column;gap:12px">
-            <div class="form-group" style="text-align:left">
-                <label class="flabel">Nuova Password (min. 6 caratteri)</label>
-                <input class="finput" id="forcePwd1" type="password" placeholder="••••••••">
+    <!-- DETAIL MODAL -->
+    <div class="modal-overlay hidden" id="detailModal"><div class="modal" id="detailContent"></div></div>
+
+    <!-- EDIT MODAL -->
+    <div class="modal-overlay hidden" id="editModal"><div class="modal modal-xl" id="editContent"></div></div>
+
+    <!-- IMPORT MODAL -->
+    <div class="modal-overlay hidden" id="importModal"><div class="modal modal-xl" id="importContent"></div></div>
+
+    <!-- CHANGE PASSWORD MODAL -->
+    <div class="modal-overlay hidden" id="changePwdModal">
+        <div class="modal" style="max-width:420px;">
+            <div class="modal-header">
+                <div><div class="modal-title">Cambia password</div><div class="modal-subtitle">Imposta una nuova password personale</div></div>
+                <button class="close-btn" onclick="closeModal('changePwdModal')"><span class="ic"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></span></button>
             </div>
-            <div class="form-group" style="text-align:left">
-                <label class="flabel">Conferma Password</label>
-                <input class="finput" id="forcePwd2" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter') doForceChangePwd()">
+            <div style="display:flex;flex-direction:column;gap:14px;">
+                <div class="form-group">
+                    <label class="flabel">Password attuale</label>
+                    <input type="password" id="chgOldPwd" class="finput" placeholder="Password attuale">
+                </div>
+                <div class="form-group">
+                    <label class="flabel">Nuova password</label>
+                    <input type="password" id="chgNewPwd" class="finput" placeholder="Nuova password (min. 6 caratteri)">
+                </div>
+                <div class="form-group">
+                    <label class="flabel">Conferma nuova password</label>
+                    <input type="password" id="chgNewPwd2" class="finput" placeholder="Ripeti nuova password" onkeydown="if(event.key==='Enter')doChangePwd()">
+                </div>
+                <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;" onclick="doChangePwd()">Salva password</button>
             </div>
-            <button class="btn btn-primary" style="width:100%;justify-content:center;padding:11px" onclick="doForceChangePwd()">
-                ✅ Imposta Password
-            </button>
         </div>
     </div>
-</div>
 
-<!-- TOAST -->
-<div class="toast-wrap" id="toastWrap"></div>
+    <!-- CONFIRM DIALOG -->
+    <div class="confirm-overlay hidden" id="confirmOverlay">
+        <div class="confirm-box">
+            <div class="confirm-icon"><span class="ic"><svg viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span></div>
+            <div class="confirm-title" id="confirmTitle">Conferma</div>
+            <div class="confirm-msg" id="confirmMsg"></div>
+            <div class="confirm-actions">
+                <button class="btn btn-outline" onclick="closeConfirm()">Annulla</button>
+                <button class="btn btn-danger" id="confirmAction" onclick="">Conferma</button>
+            </div>
+        </div>
+    </div>
 
-<!-- hidden file inputs -->
-<input type="file" id="importTableFile" accept=".csv,.tsv,.txt" style="display:none" onchange="handleTableFile(event)">
-<input type="file" id="importJSONFile" accept=".json" style="display:none" onchange="handleImportJSON(event)">
+    <!-- TOAST -->
+    <div class="toast-wrap" id="toastWrap"></div>
 
-<script>
-'use strict';
+    <input type="file" id="fileInput" style="display:none" accept=".csv,.json,.xlsx,.xls">
 
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <!-- SheetJS for Excel import -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+
+    <script>
 /* ═══════════════════════════════════════════════
-   ── FIREBASE CONFIG & INIT ──
+   FIREBASE INIT
    ═══════════════════════════════════════════════ */
 const firebaseConfig = {
     apiKey: "AIzaSyA4kXjRXhx-QIORjofw7WcKcx51DeAjYb4",
@@ -859,23 +834,53 @@ const firebaseConfig = {
     messagingSenderId: "1054112049042",
     appId: "1:1054112049042:web:892a780bc0f7705179834b"
 };
-
 firebase.initializeApp(firebaseConfig);
-const db   = firebase.firestore();
 const auth = firebase.auth();
+const db   = firebase.firestore();
 const COL  = 'clienti';
 const COL_USERS = 'utenti';
 
-// Secondary app for creating users without logging out current admin
-const secondaryApp  = firebase.initializeApp(firebaseConfig, 'secondary');
+// Secondary app to create users without logging out admin
+const secondaryApp  = firebase.initializeApp(firebaseConfig, 'Secondary');
 const secondaryAuth = secondaryApp.auth();
 
-/* ═══════════════════════════════════════════════
-   ── AUTH STATE ──
-   ═══════════════════════════════════════════════ */
-let currentAppUser = null; // { uid, username, nome, ruolo, attivo }
+let currentAppUser = null;
 let pinnedClientIds = new Set();
 
+/* ═══════════════════════════════════════════════
+   SVG ICON HELPER
+   ═══════════════════════════════════════════════ */
+const IC = {
+    search:'<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>',
+    grid:'<svg viewBox="0 0 24 24"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/></svg>',
+    list:'<svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>',
+    plus:'<svg viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></svg>',
+    edit:'<svg viewBox="0 0 24 24"><path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>',
+    trash:'<svg viewBox="0 0 24 24"><path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><path d="M10 11v6M14 11v6"/></svg>',
+    x:'<svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>',
+    copy:'<svg viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>',
+    eye:'<svg viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>',
+    eyeOff:'<svg viewBox="0 0 24 24"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.53 13.53 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" y1="2" x2="22" y2="22"/></svg>',
+    pin:'<svg viewBox="0 0 24 24"><path d="m15 4.5-4 4L7 8l-3 3 7 7 3-3-.5-4 4-4"/><path d="m2 22 5.5-5.5"/></svg>',
+    phone:'<svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>',
+    mail:'<svg viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>',
+    mapPin:'<svg viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>',
+    shield:'<svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>',
+    lock:'<svg viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
+    check:'<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>',
+    userPlus:'<svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>',
+    download:'<svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>',
+    upload:'<svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>',
+    file:'<svg viewBox="0 0 24 24"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>',
+};
+
+function ic(name, size) {
+    return '<span class="ic" style="font-size:' + (size||16) + 'px;">' + (IC[name]||'') + '</span>';
+}
+
+/* ═══════════════════════════════════════════════
+   AUTH STATE
+   ═══════════════════════════════════════════════ */
 auth.onAuthStateChanged(async (firebaseUser) => {
     if (firebaseUser) {
         try {
@@ -885,46 +890,43 @@ auth.onAuthStateChanged(async (firebaseUser) => {
                 if (!data.attivo) {
                     await auth.signOut();
                     showLoginOverlay();
-                    setLoginError('Il tuo account è stato disabilitato. Contatta l\'amministratore.');
+                    setLoginError('Account disabilitato. Contatta l\'amministratore.');
                     return;
                 }
                 currentAppUser = { uid: firebaseUser.uid, ...data };
-                // Check for pending password reset from admin
+
+                // Handle pending password from admin reset
                 if (data.pendingPassword) {
                     try {
                         await firebaseUser.updatePassword(data.pendingPassword);
-                        await db.collection(COL_USERS).doc(firebaseUser.uid).update({ pendingPassword: firebase.firestore.FieldValue.delete() });
-                        console.log('Password aggiornata automaticamente');
-                    } catch(pwdErr) {
-                        console.warn('Impossibile aggiornare la password:', pwdErr);
-                    }
+                        await db.collection(COL_USERS).doc(firebaseUser.uid).update({
+                            pendingPassword: firebase.firestore.FieldValue.delete()
+                        });
+                    } catch(e) { console.warn('pendingPassword error:', e); }
                 }
+
                 // Force password change on first login
                 if (data.mustChangePassword) {
                     document.getElementById('loginOverlay').classList.add('hidden');
                     document.getElementById('forcePwdOverlay').classList.remove('hidden');
                     return;
                 }
-                // Load pinned clients
                 pinnedClientIds = new Set(data.pinnedClients || []);
             } else {
-                // First user ever → auto-create as admin
+                // First user ever -> auto-create as admin
                 const allUsersSnap = await db.collection(COL_USERS).limit(1).get();
                 if (allUsersSnap.empty) {
                     const username = firebaseUser.email.split('@')[0];
-                    const nome = username;
-                    const userData = { username, nome, ruolo: 'admin', attivo: true, createdAt: Date.now() };
+                    const userData = { username, nome: username, ruolo: 'admin', attivo: true, createdAt: Date.now() };
                     await db.collection(COL_USERS).doc(firebaseUser.uid).set(userData);
                     currentAppUser = { uid: firebaseUser.uid, ...userData };
                 } else {
-                    // User exists in Firebase Auth but NOT in utenti → not authorized
                     await auth.signOut();
                     showLoginOverlay();
                     setLoginError('Account non autorizzato. Contatta l\'amministratore.');
                     return;
                 }
             }
-            // SUCCESS — show the app
             hideLoginOverlay();
             updateHeaderUser();
             isLoading = true;
@@ -937,7 +939,6 @@ auth.onAuthStateChanged(async (firebaseUser) => {
             setLoginError('Errore di connessione: ' + e.message);
         }
     } else {
-        // Logged out
         currentAppUser = null;
         clients = [];
         pinnedClientIds = new Set();
@@ -949,11 +950,11 @@ auth.onAuthStateChanged(async (firebaseUser) => {
 /* ── Login / Logout ── */
 function showLoginOverlay() {
     document.getElementById('loginOverlay').classList.remove('hidden');
-    document.getElementById('appWrap').style.display = 'none';
+    document.getElementById('appUI').style.display = 'none';
 }
 function hideLoginOverlay() {
     document.getElementById('loginOverlay').classList.add('hidden');
-    document.getElementById('appWrap').style.display = '';
+    document.getElementById('appUI').style.display = '';
 }
 function setLoginError(msg) {
     const el = document.getElementById('loginError');
@@ -970,13 +971,13 @@ function toggleLoginPwd() {
 
 async function doLogin() {
     const username = (document.getElementById('loginUser').value || '').trim().toLowerCase().replace(/\s+/g, '');
-    const pwd   = document.getElementById('loginPwd').value;
+    const pwd = document.getElementById('loginPwd').value;
     if (!username || !pwd) { setLoginError('Inserisci username e password'); return; }
     clearLoginError();
     const email = username + '@access.local';
     const btn = document.getElementById('loginBtn');
     btn.classList.add('login-btn-loading');
-    btn.textContent = '⏳ Accesso…';
+    btn.innerHTML = 'Accesso in corso\u2026';
     try {
         await auth.signInWithEmailAndPassword(email, pwd);
     } catch(e) {
@@ -990,94 +991,102 @@ async function doLogin() {
         setLoginError(msg);
     } finally {
         btn.classList.remove('login-btn-loading');
-        btn.textContent = '🔐 Accedi';
+        btn.innerHTML = 'Accedi';
     }
 }
 
-async function doLogout() {
-    await auth.signOut();
-}
+async function doLogout() { await auth.signOut(); }
 
-/* ── Header User Badge ── */
+/* ── Header ── */
 function updateHeaderUser() {
     if (!currentAppUser) return;
-    document.getElementById('userBadgeName').textContent = currentAppUser.nome || currentAppUser.username;
-    const rolePill = document.getElementById('userBadgeRole');
-    rolePill.textContent = currentAppUser.ruolo === 'admin' ? '👑 Admin' : '👤 Operatore';
-    rolePill.className = 'user-role-pill ' + currentAppUser.ruolo;
-    // Show settings button only for admin
+    const badge = document.getElementById('userBadge');
+    const name = currentAppUser.nome || currentAppUser.username;
+    const roleLabel = currentAppUser.ruolo === 'admin' ? 'Admin' : 'Operatore';
+    const roleClass = currentAppUser.ruolo === 'admin' ? 'admin' : 'operatore';
+    badge.innerHTML = '<span class="user-role-pill ' + roleClass + '">' + roleLabel + '</span> ' + esc(name);
     document.getElementById('settingsBtn').style.display = currentAppUser.ruolo === 'admin' ? '' : 'none';
-    document.getElementById('ddWrapper').style.display = currentAppUser.ruolo === 'admin' ? '' : 'none';
+    document.getElementById('ddData').style.display = currentAppUser.ruolo === 'admin' ? '' : 'none';
 }
 
 function isAdmin() { return currentAppUser && currentAppUser.ruolo === 'admin'; }
 
-/* ═══════════════════════════════════════════════
-   ── SETTINGS — USER MANAGEMENT (admin only) ──
-   ═══════════════════════════════════════════════ */
-async function openSettings() {
-    if (!isAdmin()) return;
-    document.getElementById('settingsModal').classList.remove('hidden');
-    await renderSettings();
+/* ── Tab Switch ── */
+function switchTab(tab) {
+    document.getElementById('tabClients').style.display = tab === 'clients' ? '' : 'none';
+    document.getElementById('tabSettings').style.display = tab === 'settings' ? '' : 'none';
+    if (tab === 'settings') renderSettings();
 }
 
+/* ═══════════════════════════════════════════════
+   SETTINGS (admin only)
+   ═══════════════════════════════════════════════ */
 async function renderSettings() {
-    const body = document.getElementById('settingsBody');
-    body.innerHTML = '<p style="color:var(--text-muted);font-size:13px;text-align:center;padding:20px">⏳ Caricamento utenti…</p>';
+    if (!isAdmin()) return;
+    const container = document.getElementById('tabSettings');
+    container.innerHTML = '<div style="padding:40px;text-align:center;color:var(--text-muted)">Caricamento utenti\u2026</div>';
 
     try {
         const snap = await db.collection(COL_USERS).orderBy('createdAt','asc').get();
         const users = snap.docs.map(d => ({ uid: d.id, ...d.data() }));
 
-        let html = '<div class="section-title">👥 Operatori registrati</div>';
-        html += '<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:24px">';
+        let html = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">';
+        html += '<div><h2 style="font-size:20px;font-weight:700;letter-spacing:-0.02em;">Gestione Utenti</h2>';
+        html += '<p style="font-size:13px;color:var(--text-muted);margin-top:2px;">Gestisci gli operatori del sistema</p></div>';
+        html += '<button class="btn btn-outline" onclick="switchTab(\'clients\')">' + ic('x',14) + ' Chiudi</button>';
+        html += '</div>';
 
+        html += '<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:32px;">';
         users.forEach(u => {
             const isMe = u.uid === currentAppUser.uid;
             const statusClass = u.attivo ? 'active' : 'disabled';
-            const statusColor = u.attivo ? '#16a34a' : '#dc2626';
-            const statusLabel = u.attivo ? '● Attivo' : '○ Disabilitato';
-            const roleLabel = u.ruolo === 'admin' ? '👑 Admin' : '👤 Operatore';
-            const escapedNome = esc(u.nome || u.username || '');
+            const statusColor = u.attivo ? 'var(--success)' : 'var(--danger)';
+            const statusLabel = u.attivo ? 'Attivo' : 'Disabilitato';
+            const roleLabel = u.ruolo === 'admin' ? 'Admin' : 'Operatore';
+            const roleClass = u.ruolo === 'admin' ? 'admin' : 'operatore';
 
             html += '<div class="settings-user-card ' + statusClass + '">' +
                 '<div style="flex:1">' +
-                    '<div style="font-weight:600;font-size:14px">' + escapedNome + '</div>' +
-                    '<div style="font-size:12px;color:var(--text-muted)">@' + esc(u.username || '') + ' — ' + roleLabel + '</div>' +
-                    '<div style="font-size:11px;color:' + statusColor + ';margin-top:2px">' + statusLabel + '</div>' +
+                    '<div style="font-weight:600;font-size:14px;">' + esc(u.nome || u.username || '') + '</div>' +
+                    '<div style="font-size:12px;color:var(--text-muted);margin-top:2px;display:flex;align-items:center;gap:6px;">' +
+                        '<span>@' + esc(u.username || '') + '</span>' +
+                        '<span class="user-role-pill ' + roleClass + '" style="font-size:9px;">' + roleLabel + '</span>' +
+                    '</div>' +
+                    '<div style="font-size:11px;color:' + statusColor + ';margin-top:4px;font-weight:600;">' + statusLabel + '</div>' +
                 '</div>';
 
             if (!isMe) {
-                html += '<div style="display:flex;gap:6px;flex-wrap:wrap">';
+                html += '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">';
                 if (u.attivo) {
-                    html += '<button class="btn btn-outline btn-sm" onclick="toggleUserActive(\'' + u.uid + '\',false)">🚫 Disabilita</button>';
+                    html += '<button class="btn btn-outline btn-sm" onclick="toggleUserActive(\'' + u.uid + '\',false)">Disabilita</button>';
                 } else {
-                    html += '<button class="btn btn-success btn-sm" onclick="toggleUserActive(\'' + u.uid + '\',true)">✅ Riabilita</button>';
+                    html += '<button class="btn btn-success btn-sm" onclick="toggleUserActive(\'' + u.uid + '\',true)">Riabilita</button>';
                 }
-                html += '<button class="btn btn-warning btn-sm" onclick="resetUserPwd(\'' + u.uid + '\',\'' + escapedNome + '\')">🔑 Reset Password</button>';
-                html += '<button class="btn btn-danger btn-sm" onclick="deleteSettingsUser(\'' + u.uid + '\',\'' + escapedNome + '\')">🗑️</button>';
+                html += '<button class="btn btn-warning btn-sm" onclick="resetUserPwd(\'' + u.uid + '\',\'' + esc(u.nome || u.username || '').replace(/'/g, "\\'") + '\')">' + ic('lock',12) + ' Reset pwd</button>';
+                html += '<button class="btn btn-danger btn-sm btn-icon" onclick="deleteSettingsUser(\'' + u.uid + '\',\'' + esc(u.nome || u.username || '').replace(/'/g, "\\'") + '\')" title="Elimina">' + ic('trash',13) + '</button>';
                 html += '</div>';
             } else {
-                html += '<span style="font-size:12px;color:var(--text-muted);white-space:nowrap">(tu)</span>';
+                html += '<span style="font-size:12px;color:var(--text-muted);font-weight:500;">(tu)</span>';
             }
             html += '</div>';
         });
-
         html += '</div>';
 
-        // Create new user form
-        html += '<div class="section-title">➕ Crea Nuovo Operatore</div>';
+        // Create user form
+        html += '<div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;">';
+        html += '<div style="font-size:15px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;">' + ic('userPlus',18) + ' Crea Nuovo Operatore</div>';
         html += '<div class="form-grid">';
         html += '<div class="form-group"><label class="flabel">Nome operatore *</label><input class="finput" id="nu_nome" placeholder="Nome e Cognome"></div>';
-        html += '<div class="form-group"><label class="flabel">Ruolo</label><select class="fselect" id="nu_ruolo"><option value="operatore">👤 Operatore</option><option value="admin">👑 Admin</option></select></div>';
-        html += '<div class="form-group"><label class="flabel">Username * (solo lettere, numeri, punti)</label><input class="finput" id="nu_username" type="text" placeholder="nome.cognome" oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9._-]/g,\'\')"></div>';
-        html += '<div class="form-group"><label class="flabel">Password * (min. 6 caratteri)</label><input class="finput" id="nu_pwd" type="password" placeholder="••••••••"></div>';
+        html += '<div class="form-group"><label class="flabel">Ruolo</label><select class="fselect" id="nu_ruolo"><option value="operatore">Operatore</option><option value="admin">Admin</option></select></div>';
+        html += '<div class="form-group"><label class="flabel">Username *</label><input class="finput" id="nu_username" type="text" placeholder="nome.cognome" oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9._-]/g,\'\')"></div>';
+        html += '<div class="form-group"><label class="flabel">Password * (min. 6 caratteri)</label><input class="finput" id="nu_pwd" type="password" placeholder="Password temporanea"></div>';
         html += '</div>';
-        html += '<div style="margin-top:16px"><button class="btn btn-success" id="createUserBtn" onclick="createUser()">➕ Crea Utente</button></div>';
+        html += '<div style="margin-top:16px;"><button class="btn btn-primary" id="createUserBtn" onclick="createUser()">' + ic('plus',14) + ' Crea Utente</button></div>';
+        html += '</div>';
 
-        body.innerHTML = html;
+        container.innerHTML = html;
     } catch(e) {
-        body.innerHTML = '<p style="color:var(--danger);text-align:center;padding:20px">Errore: ' + esc(e.message) + '</p>';
+        container.innerHTML = '<div style="padding:40px;text-align:center;color:var(--danger);">Errore: ' + esc(e.message) + '</div>';
     }
 }
 
@@ -1093,212 +1102,179 @@ async function createUser() {
 
     const email = username + '@access.local';
     const btn = document.getElementById('createUserBtn');
-    if (btn) { btn.disabled = true; btn.textContent = '⏳ Creazione…'; }
+    if (btn) { btn.disabled = true; btn.innerHTML = 'Creazione\u2026'; }
 
     try {
-        // Create in Firebase Auth using secondary app (doesn't log out current admin)
         const cred = await secondaryAuth.createUserWithEmailAndPassword(email, pwd);
         const newUid = cred.user.uid;
         await secondaryAuth.signOut();
 
-        // Save to Firestore utenti collection
         await db.collection(COL_USERS).doc(newUid).set({
             username, nome, ruolo, attivo: true, mustChangePassword: true, pinnedClients: [], createdAt: Date.now()
         });
 
-        toast('Operatore "' + nome + '" (@' + username + ') creato con successo ✓', 'ok');
-        await renderSettings(); // refresh list
+        toast('Operatore "' + nome + '" (@' + username + ') creato', 'ok');
+        await renderSettings();
     } catch(e) {
         let msg = e.message;
-        if (e.code === 'auth/email-already-in-use') msg = 'Questo username è già in uso. Se è stato eliminato di recente, prova con uno username leggermente diverso (es. nome.cognome2)';
+        if (e.code === 'auth/email-already-in-use') msg = 'Username gi\u00e0 in uso. Prova con uno diverso (es. nome.cognome2)';
         else if (e.code === 'auth/weak-password') msg = 'Password troppo debole (min. 6 caratteri)';
-        else if (e.code === 'auth/invalid-email') msg = 'Username non valido — usa solo lettere, numeri, punti e trattini';
+        else if (e.code === 'auth/invalid-email') msg = 'Username non valido';
         toast('Errore: ' + msg, 'err');
     } finally {
-        if (btn) { btn.disabled = false; btn.textContent = '➕ Crea Utente'; }
+        if (btn) { btn.disabled = false; btn.innerHTML = ic('plus',14) + ' Crea Utente'; }
     }
 }
 
 async function toggleUserActive(uid, newState) {
     try {
         await db.collection(COL_USERS).doc(uid).update({ attivo: newState });
-        toast(newState ? 'Utente riabilitato ✓' : 'Utente disabilitato', 'ok');
+        toast(newState ? 'Utente riabilitato' : 'Utente disabilitato', 'ok');
         await renderSettings();
-    } catch(e) {
-        toast('Errore: ' + e.message, 'err');
-    }
+    } catch(e) { toast('Errore: ' + e.message, 'err'); }
 }
 
 async function deleteSettingsUser(uid, nome) {
-    if (!confirm('Eliminare l\'utente "' + nome + '" dal sistema?\n\nL\'utente non potrà più accedere.')) return;
-    try {
-        await db.collection(COL_USERS).doc(uid).delete();
-        toast('Utente "' + nome + '" eliminato', 'ok');
-        await renderSettings();
-    } catch(e) {
-        toast('Errore: ' + e.message, 'err');
-    }
+    showConfirm('Eliminare "' + nome + '" dal sistema? L\'utente non potr\u00e0 pi\u00f9 accedere.', async () => {
+        try {
+            await db.collection(COL_USERS).doc(uid).delete();
+            toast('Utente "' + nome + '" eliminato', 'ok');
+            await renderSettings();
+        } catch(e) { toast('Errore: ' + e.message, 'err'); }
+    });
 }
 
 async function resetUserPwd(uid, nome) {
-    const newPwd = prompt('Inserisci la nuova password per "' + nome + '" (min. 6 caratteri).\n\nLa password verrà aggiornata al prossimo accesso dell\'utente.');
+    const newPwd = prompt('Nuova password per "' + nome + '" (min. 6 caratteri):');
     if (!newPwd) return;
-    if (newPwd.length < 6) { toast('La password deve essere di almeno 6 caratteri', 'err'); return; }
+    if (newPwd.length < 6) { toast('Min. 6 caratteri', 'err'); return; }
     try {
         await db.collection(COL_USERS).doc(uid).update({ pendingPassword: newPwd });
-        toast('Password in attesa di reset per "' + nome + '". L\'utente deve accedere con la password attuale, poi verrà aggiornata automaticamente.', 'ok');
-    } catch(e) {
-        toast('Errore: ' + e.message, 'err');
-    }
+        toast('Password impostata per "' + nome + '"', 'ok');
+    } catch(e) { toast('Errore: ' + e.message, 'err'); }
 }
 
-/* ── Self-service password change ── */
-async function changeMyPassword() {
-    const newPwd = prompt('Inserisci la tua nuova password (min. 6 caratteri):');
-    if (!newPwd) return;
-    if (newPwd.length < 6) { toast('La password deve essere di almeno 6 caratteri', 'err'); return; }
+/* ── Password change (self-service) ── */
+function openChangePwd() {
+    document.getElementById('changePwdModal').classList.remove('hidden');
+}
+
+async function doChangePwd() {
+    const oldPwd = document.getElementById('chgOldPwd').value;
+    const newPwd = document.getElementById('chgNewPwd').value;
+    const newPwd2 = document.getElementById('chgNewPwd2').value;
+    if (!oldPwd || !newPwd) { toast('Compila tutti i campi', 'err'); return; }
+    if (newPwd.length < 6) { toast('Min. 6 caratteri', 'err'); return; }
+    if (newPwd !== newPwd2) { toast('Le password non coincidono', 'err'); return; }
     try {
+        const credential = firebase.auth.EmailAuthProvider.credential(auth.currentUser.email, oldPwd);
+        await auth.currentUser.reauthenticateWithCredential(credential);
         await auth.currentUser.updatePassword(newPwd);
-        toast('Password aggiornata con successo ✓', 'ok');
+        toast('Password aggiornata', 'ok');
+        closeModal('changePwdModal');
+        document.getElementById('chgOldPwd').value = '';
+        document.getElementById('chgNewPwd').value = '';
+        document.getElementById('chgNewPwd2').value = '';
     } catch(e) {
-        if (e.code === 'auth/requires-recent-login') {
-            const oldPwd = prompt('Per sicurezza, inserisci la tua password attuale:');
-            if (!oldPwd) return;
-            try {
-                const credential = firebase.auth.EmailAuthProvider.credential(auth.currentUser.email, oldPwd);
-                await auth.currentUser.reauthenticateWithCredential(credential);
-                await auth.currentUser.updatePassword(newPwd);
-                toast('Password aggiornata con successo ✓', 'ok');
-            } catch(e2) {
-                toast('Errore: password attuale non corretta', 'err');
-            }
-        } else {
-            toast('Errore: ' + e.message, 'err');
-        }
+        toast('Password attuale non corretta', 'err');
     }
 }
 
 /* ── Force Password Change (first login) ── */
 async function doForceChangePwd() {
-    const pwd1 = document.getElementById('forcePwd1').value;
-    const pwd2 = document.getElementById('forcePwd2').value;
-    if (!pwd1 || pwd1.length < 6) { toast('La password deve essere di almeno 6 caratteri', 'err'); return; }
+    const pwd1 = document.getElementById('forceNewPwd').value;
+    const pwd2 = document.getElementById('forceNewPwd2').value;
+    if (!pwd1 || pwd1.length < 6) { toast('Min. 6 caratteri', 'err'); return; }
     if (pwd1 !== pwd2) { toast('Le password non coincidono', 'err'); return; }
     try {
         await auth.currentUser.updatePassword(pwd1);
         await db.collection(COL_USERS).doc(currentAppUser.uid).update({ mustChangePassword: false });
         currentAppUser.mustChangePassword = false;
         document.getElementById('forcePwdOverlay').classList.add('hidden');
-        // Load pinned clients
         pinnedClientIds = new Set(currentAppUser.pinnedClients || []);
-        // Now show the app
-        document.getElementById('appWrap').style.display = '';
+        document.getElementById('appUI').style.display = '';
         updateHeaderUser();
         isLoading = true;
         renderGrid();
         await load();
         isLoading = false;
         renderGrid();
-        toast('Password impostata con successo! Benvenuto 🎉', 'ok');
+        toast('Password impostata. Benvenuto!', 'ok');
     } catch(e) {
         if (e.code === 'auth/requires-recent-login') {
             toast('Sessione scaduta. Effettua nuovamente il login.', 'err');
             await auth.signOut();
-        } else {
-            toast('Errore: ' + e.message, 'err');
-        }
+        } else { toast('Errore: ' + e.message, 'err'); }
     }
 }
 
-/* ── Pin / Unpin Clients ── */
+/* ── Pin / Unpin ── */
 async function togglePin(clientId, event) {
     if (event) event.stopPropagation();
     if (pinnedClientIds.has(clientId)) {
         pinnedClientIds.delete(clientId);
-        toast('Rimosso dai preferiti', 'ok');
+        toast('Rimosso dai fissati', 'ok');
     } else {
         pinnedClientIds.add(clientId);
-        toast('📌 Fissato in alto', 'ok');
+        toast('Fissato in alto', 'ok');
     }
     try {
         await db.collection(COL_USERS).doc(currentAppUser.uid).update({
             pinnedClients: Array.from(pinnedClientIds)
         });
-    } catch(e) {
-        console.warn('Errore salvataggio pin:', e);
-    }
+    } catch(e) { console.warn('Pin save error:', e); }
     renderGrid();
-    // Update pin button in detail modal if open
     const pinBtn = document.getElementById('detailPinBtn');
     if (pinBtn && currentId) {
         const isPinned = pinnedClientIds.has(currentId);
-        pinBtn.innerHTML = isPinned ? '📌 Rimuovi dai preferiti' : '📌 Fissa in alto';
+        pinBtn.innerHTML = ic('pin',14) + ' ' + (isPinned ? 'Rimuovi' : 'Fissa in alto');
         pinBtn.className = 'btn ' + (isPinned ? 'btn-warning' : 'btn-outline');
     }
 }
 
 /* ═══════════════════════════════════════════════
-   ── DATA ──
+   DATA
    ═══════════════════════════════════════════════ */
 const ACCOUNT_TYPES = ['MEGA','ARUBA','WECARDIO','ECG','DERMATOLOGIA','ID Apple','Spirometria','Gmail','Mail','Altro'];
-const ACCOUNT_ICONS = {
-    'MEGA':'☁️','ARUBA':'🌐','WECARDIO':'❤️‍🔥','ECG':'💓',
-    'DERMATOLOGIA':'🏥','ID Apple':'🍎','Spirometria':'🫁',
-    'Gmail':'📧','Mail':'✉️','Altro':'🔑'
-};
-
 const FIELD_ALIASES = {
-    cliente:   ['cliente','nome','azienda','studio','company','name','ragione sociale','ragione_sociale','denominazione'],
-    referente: ['referente','contatto','contact','responsabile','cognome','nome referente'],
-    email:     ['email','e-mail','mail','posta','posta elettronica'],
-    telefono:  ['telefono','tel','phone','cellulare','cell','mobile','fax','contatto telefonico'],
-    indirizzo: ['indirizzo','address','via','viale','piazza','strada'],
-    citta:     ['città','citta','city','comune','localita','località'],
-    provincia: ['provincia','prov','province'],
-    cap:       ['cap','zip','codice postale','postal code','postale'],
-    note:      ['note','notes','osservazioni','annotazioni','commenti','memo']
+    cliente:['cliente','nome','azienda','studio','company','name','ragione sociale','ragione_sociale','denominazione'],
+    referente:['referente','contatto','contact','responsabile','cognome','nome referente'],
+    email:['email','e-mail','mail','posta','posta elettronica'],
+    telefono:['telefono','tel','phone','cellulare','cell','mobile','fax','contatto telefonico'],
+    indirizzo:['indirizzo','address','via','viale','piazza','strada'],
+    citta:['citt\u00e0','citta','city','comune','localita','localit\u00e0'],
+    provincia:['provincia','prov','province'],
+    cap:['cap','zip','codice postale','postal code','postale'],
+    note:['note','notes','osservazioni','annotazioni','commenti','memo']
 };
-
 const ACC_TYPE_ALIASES = {
-    'MEGA': ['mega'],
-    'ARUBA': ['aruba'],
-    'WECARDIO': ['wecardio','we cardio'],
-    'ECG': ['ecg'],
-    'DERMATOLOGIA': ['dermatologia','derm'],
-    'ID Apple': ['apple','id apple','appleid','apple_id'],
-    'Spirometria': ['spirometria','spiro'],
-    'Gmail': ['gmail'],
-    'Mail': ['mail','email account'],
-    'Altro': ['altro','other']
+    'MEGA':['mega'],'ARUBA':['aruba'],'WECARDIO':['wecardio','we cardio'],'ECG':['ecg'],
+    'DERMATOLOGIA':['dermatologia','derm'],'ID Apple':['apple','id apple','appleid','apple_id'],
+    'Spirometria':['spirometria','spiro'],'Gmail':['gmail'],'Mail':['mail','email account'],'Altro':['altro','other']
 };
-
-// Prefixes to strip when sorting/indexing alphabetically
 const PREFIXES = [
     'parafarmacia','farmacia','f.cia.','f.cia','fcia',
     'studio medico','studio associato','studio',
     'poliambulatorio','ambulatorio',
     'dott.ssa','dott.','dott','dr.ssa','dr.','dr',
-    'prof.ssa','prof.','prof',
-    'sig.ra','sig.'
+    'prof.ssa','prof.','prof','sig.ra','sig.'
 ];
-
 const ALPHA_LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
 let clients = [];
 let isLoading = false;
-let currentId  = null;
-let deleteId   = null;
-let editingId  = null;
+let currentId = null;
+let deleteId = null;
+let editingId = null;
 let editAccounts = [];
-let viewMode   = 'cards';
+let viewMode = 'grid';
 let activeLetter = null;
-
-// Import state
 let importStep = 1;
 let importRawData = [];
 let importHeaders = [];
 let importMapping = {};
 let importMergeMode = 'add';
+let confirmCallback = null;
 
 async function load() {
     try {
@@ -1307,24 +1283,20 @@ async function load() {
     } catch(e) {
         console.error('Firebase load error:', e);
         clients = [];
-        toast('Errore connessione a Firebase: ' + e.message, 'err');
+        toast('Errore connessione Firebase: ' + e.message, 'err');
     }
 }
-function uid() { return 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2,9); }
+function genId() { return 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2,9); }
 
-/* ── UTILS ── */
+/* ── Utils ── */
 function esc(s) {
-    return String(s||'')
-        .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-        .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 function initials(name) {
     if (!name) return '?';
     const p = name.trim().split(/\s+/);
     return p.length > 1 ? (p[0][0]+p[1][0]).toUpperCase() : name.slice(0,2).toUpperCase();
 }
-
-/* ── PREFIX STRIPPING ── */
 function stripPrefix(name) {
     if (!name) return '';
     const n = name.trim();
@@ -1335,7 +1307,6 @@ function stripPrefix(name) {
     }
     return n;
 }
-
 function getSortKey(name) {
     const stripped = stripPrefix(name || '');
     if (!stripped) return '#';
@@ -1343,22 +1314,19 @@ function getSortKey(name) {
     return /[A-Z]/.test(ch) ? ch : '#';
 }
 
-/* ── VIEW TOGGLE ── */
+/* ── View ── */
 function setView(mode) {
     viewMode = mode;
-    document.getElementById('vt-cards').classList.toggle('active', mode === 'cards');
-    document.getElementById('vt-list').classList.toggle('active', mode === 'list');
+    document.getElementById('vtGrid').classList.toggle('active', mode === 'grid');
+    document.getElementById('vtList').classList.toggle('active', mode === 'list');
     renderGrid();
 }
 
-/* ── LETTER FILTER ── */
-function setLetter(letter) {
-    activeLetter = (activeLetter === letter) ? null : letter;
-    renderGrid();
-}
+function onSearch() { renderGrid(); }
+
+function setLetter(letter) { activeLetter = (activeLetter === letter) ? null : letter; renderGrid(); }
 function clearLetter() { activeLetter = null; renderGrid(); }
 
-/* ── ALPHABET SIDEBAR ── */
 function buildAlphabetSidebar(presentLetters) {
     const has = new Set(presentLetters);
     const sidebar = document.getElementById('alphaSidebar');
@@ -1372,13 +1340,12 @@ function buildAlphabetSidebar(presentLetters) {
             ' title="' + l + '">' + l + '</button>';
     });
     if (has.has('#')) {
-        html += '<div class="alpha-sep"></div>' +
-        '<button class="alpha-btn has' + (activeLetter==='#'?' active':'') + '" onclick="setLetter(\'#\')" title="#">#</button>';
+        html += '<div class="alpha-sep"></div><button class="alpha-btn has' + (activeLetter==='#'?' active':'') + '" onclick="setLetter(\'#\')" title="#">#</button>';
     }
     sidebar.innerHTML = html;
 }
 
-/* ── RENDER GRID ── */
+/* ── Render Grid ── */
 function renderGrid() {
     const searchEl = document.getElementById('searchInput');
     if (!searchEl) return;
@@ -1428,28 +1395,27 @@ function renderGrid() {
         statsHtml = label;
     }
     if (activeLetter) {
-        statsHtml += ' &nbsp;<span class="active-letter-badge">Lettera ' + activeLetter + ' <button onclick="clearLetter()" title="Rimuovi filtro">✕</button></span>';
+        statsHtml += ' &nbsp;<span class="active-letter-badge">Lettera ' + activeLetter + ' <button onclick="clearLetter()" title="Rimuovi filtro">\u2715</button></span>';
     }
-    const statsEl = document.getElementById('statsBar');
+    const statsEl = document.getElementById('alphaStats');
     if (statsEl) statsEl.innerHTML = statsHtml;
 
     const area = document.getElementById('clientsArea');
     if (!area) return;
 
     if (isLoading) {
-        area.innerHTML = '<div class="empty-state"><div class="ei">⏳</div><h3>Caricamento…</h3><p>Connessione a Firebase in corso…</p></div>';
+        area.innerHTML = '<div class="empty-state"><div class="ei" style="font-size:36px;opacity:0.3;">' + ic('search',36) + '</div><h3>Caricamento\u2026</h3><p>Connessione a Firebase in corso</p></div>';
         return;
     }
     if (clients.length === 0) {
-        area.innerHTML = '<div class="empty-state"><div class="ei">👥</div><h3>Nessun cliente ancora</h3><p>Clicca su <strong>+ Nuovo Cliente</strong> per iniziare, oppure usa <strong>Importa da CSV/Excel</strong> per caricare tutti i tuoi clienti in una volta sola!</p></div>';
+        area.innerHTML = '<div class="empty-state"><div class="ei" style="font-size:36px;opacity:0.3;">' + ic('userPlus',36) + '</div><h3>Nessun cliente</h3><p>Clicca su <strong>Nuovo</strong> per iniziare oppure importa un file CSV/Excel.</p></div>';
         return;
     }
     if (displayOrder.length === 0) {
-        area.innerHTML = '<div class="empty-state"><div class="ei">🔍</div><h3>Nessun risultato</h3><p>Prova con un termine diverso o rimuovi il filtro lettera</p></div>';
+        area.innerHTML = '<div class="empty-state"><div class="ei" style="font-size:36px;opacity:0.3;">' + ic('search',36) + '</div><h3>Nessun risultato</h3><p>Prova un termine diverso o rimuovi il filtro</p></div>';
         return;
     }
 
-    // Separate pinned clients
     const pinnedInView = [];
     displayOrder.forEach(letter => {
         displayGroups[letter].forEach(c => {
@@ -1459,14 +1425,14 @@ function renderGrid() {
 
     let pinnedHtml = '';
     if (pinnedInView.length > 0) {
-        const inner = viewMode === 'cards'
+        const inner = viewMode === 'grid'
             ? '<div class="client-grid">' + pinnedInView.map(c => renderCard(c)).join('') + '</div>'
             : '<div class="client-list">' + pinnedInView.map(c => renderRow(c)).join('') + '</div>';
         pinnedHtml = '<div class="pinned-section">' +
-            '<div class="pinned-section-hd">📌 FISSATI IN ALTO</div>' + inner + '</div>';
+            '<div class="pinned-section-hd">' + ic('pin',12) + ' FISSATI IN ALTO</div>' + inner + '</div>';
     }
 
-    if (viewMode === 'cards') {
+    if (viewMode === 'grid') {
         area.innerHTML = pinnedHtml + displayOrder.map(letter => {
             const cards = displayGroups[letter].map(c => renderCard(c)).join('');
             return '<div class="letter-section" id="sec-' + letter + '">' +
@@ -1488,15 +1454,15 @@ function renderCard(c) {
     const badges = types.slice(0,5).map(t=>'<span class="badge">' + esc(t) + '</span>').join('');
     const more = types.length>5 ? '<span class="badge">+' + (types.length-5) + '</span>' : '';
     const isPinned = pinnedClientIds.has(c.id);
-    return '<div class="client-card" onclick="openDetail(\'' + c.id + '\')">' +
-        '<button class="pin-btn' + (isPinned ? ' pinned' : '') + '" onclick="togglePin(\'' + c.id + '\', event)" title="' + (isPinned ? 'Rimuovi dai preferiti' : 'Fissa in alto') + '">📌</button>' +
+    return '<div class="client-card animate-slide-up" onclick="openDetail(\'' + c.id + '\')">' +
+        '<button class="pin-btn' + (isPinned ? ' pinned' : '') + '" onclick="togglePin(\'' + c.id + '\', event)" title="' + (isPinned ? 'Rimuovi' : 'Fissa in alto') + '">' + ic('pin',13) + '</button>' +
         '<div class="client-avatar">' + esc(initials(c.cliente)) + '</div>' +
         '<div class="client-name">' + esc(c.cliente||'\u2014') + '</div>' +
         '<div class="client-ref">' + esc(c.referente||'') + '</div>' +
         '<div class="client-info">' +
-            (c.email ? '<span>✉️ ' + esc(c.email) + '</span>' : '') +
-            (c.telefono ? '<span>📞 ' + esc(c.telefono) + '</span>' : '') +
-            (c.citta ? '<span>📍 ' + esc(c.citta) + (c.provincia?' ('+esc(c.provincia)+')':'') + '</span>' : '') +
+            (c.email ? '<span>' + ic('mail',12) + ' ' + esc(c.email) + '</span>' : '') +
+            (c.telefono ? '<span>' + ic('phone',12) + ' ' + esc(c.telefono) + '</span>' : '') +
+            (c.citta ? '<span>' + ic('mapPin',12) + ' ' + esc(c.citta) + (c.provincia?' ('+esc(c.provincia)+')':'') + '</span>' : '') +
         '</div>' +
         (types.length ? '<div class="account-badges">' + badges + more + '</div>' : '') +
     '</div>';
@@ -1508,98 +1474,90 @@ function renderRow(c) {
     const more = types.length>4 ? '<span class="badge" style="font-size:9px">+' + (types.length-4) + '</span>' : '';
     const isPinned = pinnedClientIds.has(c.id);
     return '<div class="client-row" onclick="openDetail(\'' + c.id + '\')">' +
-        '<button class="pin-btn-row' + (isPinned ? ' pinned' : '') + '" onclick="togglePin(\'' + c.id + '\', event)" title="' + (isPinned ? 'Rimuovi dai preferiti' : 'Fissa in alto') + '">📌</button>' +
+        '<button class="pin-btn-row' + (isPinned ? ' pinned' : '') + '" onclick="togglePin(\'' + c.id + '\', event)" title="' + (isPinned ? 'Rimuovi' : 'Fissa in alto') + '">' + ic('pin',12) + '</button>' +
         '<div class="cr-avatar">' + esc(initials(c.cliente)) + '</div>' +
         '<div class="cr-main"><div class="cr-name">' + esc(c.cliente||'\u2014') + '</div><div class="cr-ref">' + esc(c.referente||'') + '</div></div>' +
         '<div class="cr-contact">' +
-            (c.email ? '<span>✉️ ' + esc(c.email) + '</span>' : '') +
-            (c.telefono ? '<span>📞 ' + esc(c.telefono) + '</span>' : '') +
+            (c.email ? '<span>' + ic('mail',11) + ' ' + esc(c.email) + '</span>' : '') +
+            (c.telefono ? '<span>' + ic('phone',11) + ' ' + esc(c.telefono) + '</span>' : '') +
         '</div>' +
-        '<div class="cr-location">' + (c.citta ? '📍 ' + esc(c.citta) + (c.provincia?' ('+esc(c.provincia)+')':'') : '') + '</div>' +
+        '<div class="cr-location">' + (c.citta ? ic('mapPin',11) + ' ' + esc(c.citta) + (c.provincia?' ('+esc(c.provincia)+')':'') : '') + '</div>' +
         '<div class="cr-badges">' + badges + more + '</div>' +
     '</div>';
 }
 
 /* ═══════════════════════════════════════════════
-   ── DETAIL ──
+   DETAIL
    ═══════════════════════════════════════════════ */
 function openDetail(id) {
     const c = clients.find(x=>x.id===id);
     if (!c) return;
     currentId = id;
-    document.getElementById('dTitle').textContent = c.cliente || '\u2014';
-    document.getElementById('dSub').textContent = c.referente || '';
-
-    // Show/hide delete button based on role
-    const delBtn = document.getElementById('detailDeleteBtn');
-    if (delBtn) delBtn.style.display = isAdmin() ? '' : 'none';
-
-    // Update pin button state
-    const pinBtn = document.getElementById('detailPinBtn');
-    if (pinBtn) {
-        const isPinned = pinnedClientIds.has(id);
-        pinBtn.innerHTML = isPinned ? '📌 Rimuovi dai preferiti' : '📌 Fissa in alto';
-        pinBtn.className = 'btn ' + (isPinned ? 'btn-warning' : 'btn-outline');
-    }
 
     const accs = c.accounts || [];
     const byType = {};
     accs.forEach(a => { (byType[a.type] = byType[a.type]||[]).push(a); });
+    const isPinned = pinnedClientIds.has(id);
 
-    let html = '';
-    html += '<div style="margin-bottom:20px">' +
-        '<div class="section-title">📋 Anagrafica</div>' +
+    let html = '<div class="modal-header">' +
+        '<div><div class="modal-title">' + esc(c.cliente || '\u2014') + '</div>' +
+        '<div class="modal-subtitle">' + esc(c.referente || '') + '</div></div>' +
+        '<button class="close-btn" onclick="closeModal(\'detailModal\')">' + ic('x') + '</button></div>';
+
+    html += '<div class="section-title">Anagrafica</div>' +
         '<div class="detail-grid">' +
-            di('Cliente', c.cliente) +
-            di('Referente', c.referente) +
-            di('Email', c.email, true) +
-            di('Telefono', c.telefono) +
-            di('Indirizzo', c.indirizzo, false, true) +
-            di('Città', c.citta) +
-            di('Provincia / CAP', [c.provincia,c.cap].filter(Boolean).join(' \u2013 ')) +
-        '</div></div>';
+            dItem('Cliente', c.cliente) +
+            dItem('Referente', c.referente) +
+            dItem('Email', c.email, true) +
+            dItem('Telefono', c.telefono) +
+            dItem('Indirizzo', c.indirizzo, false, true) +
+            dItem('Citt\u00e0', c.citta) +
+            dItem('Provincia / CAP', [c.provincia,c.cap].filter(Boolean).join(' \u2013 ')) +
+        '</div>';
 
     if (c.note) {
-        html += '<div style="margin-bottom:20px">' +
-            '<div class="section-title">📝 Note</div>' +
-            '<div class="notes-box">' + esc(c.note) + '</div></div>';
+        html += '<div class="section-title" style="margin-top:20px">Note</div>' +
+            '<div class="notes-box">' + esc(c.note) + '</div>';
     }
 
     if (accs.length) {
-        html += '<div><div class="section-title">🔐 Account</div>';
+        html += '<div class="section-title" style="margin-top:20px">Account</div>';
         Object.entries(byType).forEach(([type, list]) => {
             list.forEach((acc, i) => {
-                const key = type + '_' + i;
+                const key = type.replace(/\s/g,'_') + '_' + i;
                 html += '<div class="acc-card">' +
-                    '<div class="acc-type-label">' +
-                        (ACCOUNT_ICONS[type]||'🔑') + ' ' + esc(type) + (list.length>1?' #'+(i+1):'') +
-                    '</div>' +
+                    '<div class="acc-type-label">' + ic('lock',13) + ' ' + esc(type) + (list.length>1?' #'+(i+1):'') + '</div>' +
                     '<div class="acc-row"><div>' +
                         '<div class="dlabel">Username / Email</div>' +
                         '<div class="pwd-row">' +
                             '<span class="pwd-val">' + (acc.username ? esc(acc.username) : '<em style="color:var(--text-muted);font-style:italic;font-size:12px">\u2014</em>') + '</span>' +
-                            (acc.username ? '<button class="icon-btn" onclick="cp(\'' + esc(acc.username).replace(/'/g,"\\'") + '\')" title="Copia">📋</button>' : '') +
+                            (acc.username ? '<button class="icon-btn" onclick="cp(\'' + esc(acc.username).replace(/'/g,"\\'") + '\')" title="Copia">' + ic('copy',14) + '</button>' : '') +
                         '</div></div><div>' +
                         '<div class="dlabel">Password</div>' +
                         '<div class="pwd-row">' +
                             '<span class="pwd-val" id="pv_' + esc(key) + '" data-pwd="' + esc(acc.password||'') + '" data-vis="0">' +
-                                (acc.password ? '••••••••' : '<em style="color:var(--text-muted);font-style:italic;font-size:12px">\u2014</em>') +
+                                (acc.password ? '\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022' : '<em style="color:var(--text-muted);font-style:italic;font-size:12px">\u2014</em>') +
                             '</span>' +
-                            (acc.password ? '<button class="icon-btn" onclick="togglePwd(\'pv_' + esc(key) + '\')" title="Mostra/Nascondi">👁️</button>' +
-                                '<button class="icon-btn" onclick="cp(\'' + esc(acc.password).replace(/'/g,"\\'") + '\')" title="Copia">📋</button>' : '') +
+                            (acc.password ? '<button class="icon-btn" onclick="togglePwd(\'pv_' + esc(key) + '\')" title="Mostra/Nascondi">' + ic('eye',14) + '</button>' +
+                                '<button class="icon-btn" onclick="cp(\'' + esc(acc.password).replace(/'/g,"\\'") + '\')" title="Copia">' + ic('copy',14) + '</button>' : '') +
                         '</div></div></div>' +
-                    (acc.note ? '<div class="acc-note">📌 ' + esc(acc.note) + '</div>' : '') +
+                    (acc.note ? '<div class="acc-note">' + esc(acc.note) + '</div>' : '') +
                 '</div>';
             });
         });
-        html += '</div>';
     }
 
-    document.getElementById('dBody').innerHTML = html;
+    html += '<div class="modal-actions">' +
+        '<button class="btn btn-outline" id="detailPinBtn" onclick="togglePin(\'' + id + '\')">' + ic('pin',14) + ' ' + (isPinned ? 'Rimuovi' : 'Fissa in alto') + '</button>' +
+        '<button class="btn btn-primary" onclick="editFromDetail()">' + ic('edit',14) + ' Modifica</button>' +
+        (isAdmin() ? '<button class="btn btn-danger ml-auto" id="detailDeleteBtn" onclick="askDelete()">' + ic('trash',14) + ' Elimina</button>' : '') +
+    '</div>';
+
+    document.getElementById('detailContent').innerHTML = html;
     document.getElementById('detailModal').classList.remove('hidden');
 }
 
-function di(label, val, isEmail, fullWidth) {
+function dItem(label, val, isEmail, fullWidth) {
     const empty = !val;
     let display = empty ? '\u2014' : esc(val);
     if (!empty && isEmail) display = '<a href="mailto:' + esc(val) + '">' + esc(val) + '</a>';
@@ -1612,7 +1570,7 @@ function togglePwd(id) {
     const el = document.getElementById(id);
     if (!el) return;
     const vis = el.dataset.vis === '1';
-    el.textContent = vis ? '••••••••' : el.dataset.pwd;
+    el.textContent = vis ? '\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022' : el.dataset.pwd;
     el.dataset.vis = vis ? '0' : '1';
 }
 
@@ -1623,21 +1581,18 @@ function cp(text) {
         document.execCommand('copy'); document.body.removeChild(t);
     };
     if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(() => toast('Copiato!','ok')).catch(fallback);
-    } else { fallback(); toast('Copiato!','ok'); }
+        navigator.clipboard.writeText(text).then(() => toast('Copiato','ok')).catch(fallback);
+    } else { fallback(); toast('Copiato','ok'); }
 }
 
 function editFromDetail() { closeModal('detailModal'); openEdit(currentId); }
 
 function askDelete() {
-    if (!isAdmin()) { toast('Solo l\'admin può eliminare i clienti', 'err'); return; }
+    if (!isAdmin()) { toast('Solo l\'admin pu\u00f2 eliminare', 'err'); return; }
     deleteId = currentId;
     const c = clients.find(x=>x.id===deleteId);
-    document.getElementById('confirmMsg').textContent =
-        'Stai per eliminare "' + (c?.cliente||'questo cliente') + '" e tutti i suoi dati. L\'operazione non può essere annullata.';
-    document.getElementById('confirmDlg').classList.remove('hidden');
+    showConfirm('Eliminare "' + (c?.cliente||'questo cliente') + '" e tutti i suoi dati? L\'operazione non pu\u00f2 essere annullata.', doDelete);
 }
-function closeConfirm() { document.getElementById('confirmDlg').classList.add('hidden'); deleteId=null; }
 
 async function doDelete() {
     if (!deleteId || !isAdmin()) return;
@@ -1646,21 +1601,19 @@ async function doDelete() {
     try {
         await db.collection(COL).doc(idToDelete).delete();
         clients = clients.filter(c=>c.id!==idToDelete);
-        closeModal('detailModal'); renderGrid();
+        closeModal('detailModal');
+        renderGrid();
         toast('Cliente eliminato','ok');
-    } catch(e) {
-        toast('Errore eliminazione: ' + e.message, 'err');
-    }
+    } catch(e) { toast('Errore eliminazione: ' + e.message, 'err'); }
     deleteId = null;
 }
 
 /* ═══════════════════════════════════════════════
-   ── EDIT FORM ──
+   EDIT FORM
    ═══════════════════════════════════════════════ */
-function openAdd() {
+function openNew() {
     editingId = null; editAccounts = [];
-    document.getElementById('editTitle').textContent = 'Nuovo Cliente';
-    buildForm({});
+    buildEditModal('Nuovo Cliente', {});
     document.getElementById('editModal').classList.remove('hidden');
 }
 function openEdit(id) {
@@ -1668,41 +1621,50 @@ function openEdit(id) {
     if (!c) return;
     editingId = id;
     editAccounts = JSON.parse(JSON.stringify(c.accounts||[]));
-    document.getElementById('editTitle').textContent = 'Modifica Cliente';
-    buildForm(c);
+    buildEditModal('Modifica Cliente', c);
     document.getElementById('editModal').classList.remove('hidden');
 }
 
-function buildForm(c) {
-    document.getElementById('editBody').innerHTML =
-    '<div class="form-section">' +
-        '<div class="form-section-title">📋 Dati Principali</div>' +
+function buildEditModal(title, c) {
+    let html = '<div class="modal-header">' +
+        '<div><div class="modal-title">' + title + '</div></div>' +
+        '<button class="close-btn" onclick="closeModal(\'editModal\')">' + ic('x') + '</button></div>';
+
+    html += '<div class="form-section">' +
+        '<div class="form-section-title">Dati principali</div>' +
         '<div class="form-grid">' +
             '<div class="form-group"><label class="flabel">Cliente *</label>' +
                 '<input class="finput" id="f_cliente" value="' + esc(c.cliente||'') + '" placeholder="Nome studio / azienda"></div>' +
             '<div class="form-group"><label class="flabel">Referente</label>' +
                 '<input class="finput" id="f_referente" value="' + esc(c.referente||'') + '" placeholder="Nome e cognome"></div>' +
-            '<div class="form-group"><label class="flabel">Email di Contatto</label>' +
+            '<div class="form-group"><label class="flabel">Email</label>' +
                 '<input class="finput" id="f_email" type="email" value="' + esc(c.email||'') + '" placeholder="esempio@email.it"></div>' +
-            '<div class="form-group"><label class="flabel">Contatto Telefonico</label>' +
+            '<div class="form-group"><label class="flabel">Telefono</label>' +
                 '<input class="finput" id="f_telefono" value="' + esc(c.telefono||'') + '" placeholder="+39 000 000 0000"></div>' +
             '<div class="form-group fw"><label class="flabel">Indirizzo</label>' +
                 '<input class="finput" id="f_indirizzo" value="' + esc(c.indirizzo||'') + '" placeholder="Via / Piazza, numero civico"></div>' +
-            '<div class="form-group"><label class="flabel">Città</label>' +
-                '<input class="finput" id="f_citta" value="' + esc(c.citta||'') + '" placeholder="Città"></div>' +
+            '<div class="form-group"><label class="flabel">Citt\u00e0</label>' +
+                '<input class="finput" id="f_citta" value="' + esc(c.citta||'') + '" placeholder="Citt\u00e0"></div>' +
             '<div class="form-group half2">' +
                 '<div><label class="flabel">Provincia</label><input class="finput" id="f_provincia" value="' + esc(c.provincia||'') + '" placeholder="MI" maxlength="5"></div>' +
                 '<div><label class="flabel">CAP</label><input class="finput" id="f_cap" value="' + esc(c.cap||'') + '" placeholder="20100" maxlength="10"></div>' +
             '</div>' +
             '<div class="form-group fw"><label class="flabel">Note</label>' +
-                '<textarea class="ftextarea" id="f_note" placeholder="Note aggiuntive sul cliente…">' + esc(c.note||'') + '</textarea></div>' +
-        '</div>' +
-    '</div>' +
-    '<div class="form-section">' +
-        '<div class="form-section-title">🔐 Account</div>' +
+                '<textarea class="ftextarea" id="f_note" placeholder="Note aggiuntive\u2026">' + esc(c.note||'') + '</textarea></div>' +
+        '</div></div>';
+
+    html += '<div class="form-section">' +
+        '<div class="form-section-title">Account</div>' +
         '<div id="accFormList"></div>' +
-        '<button type="button" class="add-acc-btn" onclick="addAcc()">＋ Aggiungi Account</button>' +
+        '<button type="button" class="add-acc-btn" onclick="addAcc()">+ Aggiungi Account</button>' +
     '</div>';
+
+    html += '<div class="modal-actions">' +
+        '<button class="btn btn-outline" onclick="closeModal(\'editModal\')">Annulla</button>' +
+        '<button class="btn btn-primary ml-auto" onclick="saveClient()">' + ic('check',14) + ' Salva Cliente</button>' +
+    '</div>';
+
+    document.getElementById('editContent').innerHTML = html;
     renderAccForm();
 }
 
@@ -1715,7 +1677,7 @@ function renderAccForm() {
                 '<select class="fselect" style="flex:1;max-width:175px" onchange="updAcc(' + i + ',\'type\',this.value)">' +
                     ACCOUNT_TYPES.map(t=>'<option value="' + esc(t) + '"' + (acc.type===t?' selected':'') + '>' + esc(t) + '</option>').join('') +
                 '</select>' +
-                '<button type="button" style="margin-left:auto;background:none;border:none;cursor:pointer;font-size:17px;color:#ef4444;padding:2px 5px;border-radius:6px;" onclick="rmAcc(' + i + ')">✕</button>' +
+                '<button type="button" style="margin-left:auto;background:none;border:none;cursor:pointer;color:var(--danger);padding:4px;border-radius:6px;display:flex;" onclick="rmAcc(' + i + ')">' + ic('x',16) + '</button>' +
             '</div>' +
             '<div class="acc-form-row">' +
                 '<div class="form-group"><label class="flabel">Username / Email</label>' +
@@ -1723,11 +1685,11 @@ function renderAccForm() {
                 '<div class="form-group"><label class="flabel">Password</label>' +
                     '<div class="pwd-input-wrap">' +
                         '<input class="finput" id="fp_' + i + '" type="password" value="' + esc(acc.password||'') + '" oninput="updAcc(' + i + ',\'password\',this.value)" placeholder="password">' +
-                        '<button type="button" class="pwd-eye" onclick="toggleFormPwd(' + i + ')">👁️</button>' +
+                        '<button type="button" class="pwd-eye" onclick="toggleFormPwd(' + i + ')">' + ic('eye',14) + '</button>' +
                     '</div></div>' +
             '</div>' +
-            '<div class="form-group" style="margin-top:8px"><label class="flabel">Nota account (opzionale)</label>' +
-                '<input class="finput" value="' + esc(acc.note||'') + '" oninput="updAcc(' + i + ',\'note\',this.value)" placeholder="es. account principale, account secondario…"></div>' +
+            '<div class="form-group" style="margin-top:8px"><label class="flabel">Nota account</label>' +
+                '<input class="finput" value="' + esc(acc.note||'') + '" oninput="updAcc(' + i + ',\'note\',this.value)" placeholder="es. account principale"></div>' +
         '</div>'
     ).join('');
 }
@@ -1758,56 +1720,109 @@ async function saveClient() {
         accounts   : editAccounts.filter(a=>a.username||a.password)
     };
 
-    const btn = document.querySelector('#editModal .btn-primary');
-    if (btn) { btn.disabled = true; btn.textContent = '⏳ Salvataggio…'; }
-
     try {
         if (editingId) {
             await db.collection(COL).doc(editingId).set(data);
             const idx = clients.findIndex(c=>c.id===editingId);
             if (idx !== -1) clients[idx] = { id: editingId, ...data };
         } else {
-            const docId = uid();
+            const docId = genId();
             data.id = docId;
             data.createdAt = Date.now();
             await db.collection(COL).doc(docId).set(data);
             clients.push(data);
         }
         closeModal('editModal'); renderGrid();
-        toast(editingId ? 'Cliente aggiornato ✓' : 'Cliente aggiunto ✓', 'ok');
+        toast(editingId ? 'Cliente aggiornato' : 'Cliente aggiunto', 'ok');
     } catch(e) {
         toast('Errore salvataggio: ' + e.message, 'err');
-    } finally {
-        if (btn) { btn.disabled = false; btn.textContent = '💾 Salva Cliente'; }
     }
 }
 
 /* ═══════════════════════════════════════════════
-   ── IMPORT FROM TABLE (CSV / Excel) ──
+   IMPORT
    ═══════════════════════════════════════════════ */
+function importCSV() { toggleDD(false); openTableImport('csv'); }
+function importJSON() { toggleDD(false); triggerImportJSON(); }
+function importExcel() { toggleDD(false); openTableImport('excel'); }
 
-function openTableImport() {
-    toggleDD(false);
+function openTableImport(type) {
     importStep = 1;
-    importRawData = [];
-    importHeaders = [];
-    importMapping = {};
-    importMergeMode = 'add';
-    showImportStep(1);
+    importRawData = []; importHeaders = []; importMapping = {}; importMergeMode = 'add';
+
+    let html = '<div class="modal-header">' +
+        '<div><div class="modal-title">Importa Clienti</div><div class="modal-subtitle">Carica un file per importare i dati</div></div>' +
+        '<button class="close-btn" onclick="closeModal(\'importModal\')">' + ic('x') + '</button></div>';
+
+    // Step 1
+    html += '<div class="import-step active" id="importStep1">' +
+        '<div class="import-drop-zone" id="dropZone" ondragover="dzOver(event)" ondragleave="dzLeave()" ondrop="dzDrop(event)" onclick="document.getElementById(\'fileInput\').click()">' +
+            '<div class="drop-icon">' + ic('upload',44) + '</div>' +
+            '<h3>Trascina il file qui</h3>' +
+            '<p>oppure clicca per selezionare</p>' +
+            '<button class="btn btn-outline" style="pointer-events:none;">Sfoglia file</button>' +
+        '</div>' +
+        '<div class="import-info-box">' +
+            '<strong>Formati supportati:</strong> CSV, TSV, Excel (.xlsx, .xls)<br>' +
+            'La prima riga deve contenere le intestazioni delle colonne.' +
+        '</div></div>';
+
+    // Step 2
+    html += '<div class="import-step" id="importStep2">' +
+        '<div class="step-header"><span class="step-pill">Passo 2 di 3</span><div><div class="step-title">Mappa colonne</div><div class="step-sub" id="step2Sub"></div></div></div>' +
+        '<div id="colMapGrid"></div>' +
+        '<div class="section-title" style="margin-top:16px">Anteprima dati</div>' +
+        '<div class="preview-wrap"><table class="preview-table" id="previewTable"></table></div>' +
+    '</div>';
+
+    // Step 3
+    html += '<div class="import-step" id="importStep3">' +
+        '<div class="step-header"><span class="step-pill">Passo 3 di 3</span><div><div class="step-title">Conferma importazione</div></div></div>' +
+        '<div class="import-summary" id="importSummary"></div>' +
+        '<div class="section-title">Modalit\u00e0 importazione</div>' +
+        '<div class="merge-options">' +
+            '<div class="merge-opt selected" id="mopt_add" onclick="selectMerge(\'add\')">' +
+                '<div class="merge-opt-title">Aggiungi / Unisci</div>' +
+                '<div class="merge-opt-desc">Aggiunge i nuovi clienti e aggiorna quelli con lo stesso nome</div>' +
+            '</div>' +
+            '<div class="merge-opt" id="mopt_replace" onclick="selectMerge(\'replace\')">' +
+                '<div class="merge-opt-title">Sostituisci tutto</div>' +
+                '<div class="merge-opt-desc">Elimina tutti i clienti esistenti e importa solo quelli del file</div>' +
+            '</div>' +
+        '</div>' +
+        '<div class="section-title">Anteprima finale</div>' +
+        '<div class="preview-wrap"><table class="preview-table" id="finalPreviewTable"></table></div>' +
+    '</div>';
+
+    // Actions
+    html += '<div class="modal-actions">' +
+        '<button class="btn btn-outline" id="importBackBtn" style="display:none" onclick="importBack()">Indietro</button>' +
+        '<button class="btn btn-primary ml-auto" id="importNextBtn" style="display:none" onclick="importNext()">Avanti</button>' +
+    '</div>';
+
+    document.getElementById('importContent').innerHTML = html;
     document.getElementById('importModal').classList.remove('hidden');
+
+    // Set file input handler
+    const fi = document.getElementById('fileInput');
+    fi.onchange = function(e) { handleTableFile(e); };
+    fi.accept = type === 'excel' ? '.xlsx,.xls' : '.csv,.tsv,.txt';
 }
 
 function showImportStep(n) {
     importStep = n;
     [1,2,3].forEach(i => {
-        document.getElementById('importStep'+i).classList.toggle('active', i===n);
+        const el = document.getElementById('importStep'+i);
+        if (el) el.classList.toggle('active', i===n);
     });
     const backBtn = document.getElementById('importBackBtn');
     const nextBtn = document.getElementById('importNextBtn');
-    backBtn.style.display = n > 1 ? '' : 'none';
-    if (n === 1) { nextBtn.textContent = 'Avanti →'; nextBtn.style.display = 'none'; }
-    if (n === 2) { nextBtn.textContent = 'Avanti →'; nextBtn.style.display = ''; }
-    if (n === 3) { nextBtn.textContent = '✅ Importa Clienti'; nextBtn.style.display = ''; }
+    if (backBtn) backBtn.style.display = n > 1 ? '' : 'none';
+    if (nextBtn) {
+        if (n === 1) { nextBtn.style.display = 'none'; }
+        if (n === 2) { nextBtn.textContent = 'Avanti \u2192'; nextBtn.style.display = ''; }
+        if (n === 3) { nextBtn.textContent = 'Importa Clienti'; nextBtn.style.display = ''; }
+    }
 }
 
 function importNext() {
@@ -1829,12 +1844,8 @@ function importNext() {
         doTableImport();
     }
 }
+function importBack() { if (importStep > 1) showImportStep(importStep - 1); }
 
-function importBack() {
-    if (importStep > 1) showImportStep(importStep - 1);
-}
-
-/* ── Drag & drop ── */
 function dzOver(e) { e.preventDefault(); document.getElementById('dropZone').classList.add('drag-over'); }
 function dzLeave() { document.getElementById('dropZone').classList.remove('drag-over'); }
 function dzDrop(e) {
@@ -1851,28 +1862,42 @@ function handleTableFile(e) {
 }
 
 function processTableFile(file) {
-    const reader = new FileReader();
-    reader.onload = ev => {
-        try {
-            const text = ev.target.result;
-            const parsed = parseCSV(text);
-            if (!parsed || parsed.length < 2) {
-                toast('File vuoto o non valido — assicurati che ci sia almeno una riga di intestazione','err');
-                return;
-            }
-            importHeaders = parsed[0];
-            importRawData = parsed.slice(1).filter(row => row.some(c=>c.trim()));
-            importMapping = autoDetectMapping(importHeaders);
-            buildStep2(file.name);
-            showImportStep(2);
-        } catch(err) {
-            toast('Errore nel leggere il file: ' + err.message, 'err');
-        }
-    };
-    reader.readAsText(file, 'UTF-8');
+    const ext = file.name.split('.').pop().toLowerCase();
+    if (ext === 'xlsx' || ext === 'xls') {
+        const reader = new FileReader();
+        reader.onload = ev => {
+            try {
+                const wb = XLSX.read(ev.target.result, {type:'array'});
+                const ws = wb.Sheets[wb.SheetNames[0]];
+                const data = XLSX.utils.sheet_to_json(ws, {header:1, defval:''});
+                if (!data || data.length < 2) { toast('File vuoto o non valido','err'); return; }
+                importHeaders = data[0].map(h => String(h).trim());
+                importRawData = data.slice(1).filter(row => row.some(c => String(c).trim()));
+                importRawData = importRawData.map(row => row.map(c => String(c).trim()));
+                importMapping = autoDetectMapping(importHeaders);
+                buildStep2(file.name);
+                showImportStep(2);
+            } catch(err) { toast('Errore nel leggere il file: ' + err.message, 'err'); }
+        };
+        reader.readAsArrayBuffer(file);
+    } else {
+        const reader = new FileReader();
+        reader.onload = ev => {
+            try {
+                const text = ev.target.result;
+                const parsed = parseCSV(text);
+                if (!parsed || parsed.length < 2) { toast('File vuoto o non valido','err'); return; }
+                importHeaders = parsed[0];
+                importRawData = parsed.slice(1).filter(row => row.some(c=>c.trim()));
+                importMapping = autoDetectMapping(importHeaders);
+                buildStep2(file.name);
+                showImportStep(2);
+            } catch(err) { toast('Errore: ' + err.message, 'err'); }
+        };
+        reader.readAsText(file, 'UTF-8');
+    }
 }
 
-/* ── CSV Parser ── */
 function parseCSV(text) {
     const firstLine = text.split('\n')[0];
     let delim = ',';
@@ -1882,31 +1907,20 @@ function parseCSV(text) {
     if (semicolons > commas && semicolons >= tabs) delim = ';';
     else if (tabs > commas && tabs >= semicolons) delim = '\t';
 
-    const rows = [];
-    let row = [];
-    let field = '';
-    let inQuotes = false;
-    let i = 0;
-
+    const rows = []; let row = []; let field = ''; let inQuotes = false; let i = 0;
     text = text.replace(/\r\n/g,'\n').replace(/\r/g,'\n');
     if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
 
     while (i < text.length) {
         const ch = text[i];
         if (inQuotes) {
-            if (ch === '"') {
-                if (text[i+1] === '"') { field += '"'; i += 2; continue; }
-                else { inQuotes = false; }
-            } else { field += ch; }
+            if (ch === '"') { if (text[i+1] === '"') { field += '"'; i += 2; continue; } else { inQuotes = false; } }
+            else { field += ch; }
         } else {
             if (ch === '"') { inQuotes = true; }
             else if (ch === delim) { row.push(field.trim()); field = ''; }
-            else if (ch === '\n') {
-                row.push(field.trim()); field = '';
-                if (row.some(c=>c)) rows.push(row);
-                row = [];
-                i++; continue;
-            } else { field += ch; }
+            else if (ch === '\n') { row.push(field.trim()); field = ''; if (row.some(c=>c)) rows.push(row); row = []; i++; continue; }
+            else { field += ch; }
         }
         i++;
     }
@@ -1914,69 +1928,44 @@ function parseCSV(text) {
     return rows;
 }
 
-/* ── Auto-detect mapping ── */
 function autoDetectMapping(headers) {
     const mapping = {};
-    headers.forEach((h) => {
+    headers.forEach(h => {
         const hl = h.toLowerCase().trim();
         for (const [field, aliases] of Object.entries(FIELD_ALIASES)) {
             if (mapping[field]) continue;
-            if (aliases.some(a => hl === a || hl.includes(a))) {
-                mapping[field] = h;
-            }
+            if (aliases.some(a => hl === a || hl.includes(a))) mapping[field] = h;
         }
     });
     return mapping;
 }
 
-/* ── Detect account columns ── */
 function detectAccColumns(headers) {
     const result = [];
     headers.forEach(h => {
         const hl = h.toLowerCase().trim();
         let matchedType = null;
-
         for (const [type, aliases] of Object.entries(ACC_TYPE_ALIASES)) {
-            for (const alias of aliases) {
-                if (hl.includes(alias)) { matchedType = type; break; }
-            }
+            for (const alias of aliases) { if (hl.includes(alias)) { matchedType = type; break; } }
             if (matchedType) break;
         }
-
         if (!matchedType) return;
-
         let role;
-        if (hl.includes('pass') || hl.includes('pwd') || hl.includes('psw') || hl.includes('password')) {
-            role = matchedType + '_pass';
-        } else {
-            role = matchedType + '_user';
-        }
-
+        if (hl.includes('pass') || hl.includes('pwd') || hl.includes('psw') || hl.includes('password')) role = matchedType + '_pass';
+        else role = matchedType + '_user';
         result.push({ header: h, detectedType: matchedType, role });
     });
     return result;
 }
 
-/* ── Build Step 2 UI ── */
 function buildStep2(filename) {
-    document.getElementById('step2Sub').textContent =
-        'File: ' + filename + ' — ' + importRawData.length + ' righe trovate. Verifica l\'abbinamento colonne.';
-
-    const FIELD_LABELS = {
-        cliente: 'Cliente *', referente: 'Referente', email: 'Email',
-        telefono: 'Telefono', indirizzo: 'Indirizzo', citta: 'Città',
-        provincia: 'Provincia', cap: 'CAP', note: 'Note'
-    };
-
-    const noneOpt = '<option value="">— non importare —</option>';
-    let html = '';
-
-    html += '<div class="section-title" style="margin-bottom:10px">📋 Campi anagrafici</div>';
-    html += '<div class="col-map-grid">';
+    document.getElementById('step2Sub').textContent = 'File: ' + filename + ' \u2014 ' + importRawData.length + ' righe trovate.';
+    const FIELD_LABELS = { cliente:'Cliente *', referente:'Referente', email:'Email', telefono:'Telefono', indirizzo:'Indirizzo', citta:'Citt\u00e0', provincia:'Provincia', cap:'CAP', note:'Note' };
+    const noneOpt = '<option value="">\u2014 non importare \u2014</option>';
+    let html = '<div class="section-title" style="margin-bottom:10px">Campi anagrafici</div><div class="col-map-grid">';
     for (const [field, label] of Object.entries(FIELD_LABELS)) {
         const sel = importMapping[field] || '';
-        html += '<div class="col-map-item">' +
-            '<div class="col-map-label">' + label + '</div>' +
+        html += '<div class="col-map-item"><div class="col-map-label">' + label + '</div>' +
             '<select data-map-field="' + field + '" onchange="onMapChange(this)" class="' + (sel?'mapped':'') + '">' +
                 noneOpt + importHeaders.map(h=>'<option value="' + esc(h) + '"' + (h===sel?' selected':'') + '>' + esc(h) + '</option>').join('') +
             '</select></div>';
@@ -1988,24 +1977,14 @@ function buildStep2(filename) {
     const unmappedHeaders = importHeaders.filter(h => !mappedHeaders.has(h));
 
     if (unmappedHeaders.length > 0) {
-        html += '<div class="section-title" style="margin-top:16px;margin-bottom:10px">🔐 Colonne Account</div>';
-        html += '<p style="font-size:12px;color:var(--text-muted);margin-bottom:12px">Per ogni colonna non ancora abbinata, indica se contiene username o password di un account specifico:</p>';
+        html += '<div class="section-title" style="margin-top:16px;margin-bottom:10px">Colonne Account</div>';
+        html += '<p style="font-size:12px;color:var(--text-muted);margin-bottom:12px">Per ogni colonna, indica se contiene username o password:</p>';
         html += '<div class="col-map-grid">';
-
-        const roleOptions = [
-            {v:'__none__', l:'— ignora —'},
-            ...ACCOUNT_TYPES.flatMap(t => [
-                {v: t+'_user', l: (ACCOUNT_ICONS[t]||'🔑') + ' ' + t + ' — Username'},
-                {v: t+'_pass', l: (ACCOUNT_ICONS[t]||'🔑') + ' ' + t + ' — Password'}
-            ])
-        ];
-
+        const roleOptions = [{v:'__none__', l:'\u2014 ignora \u2014'},...ACCOUNT_TYPES.flatMap(t => [{v:t+'_user',l:t+' \u2014 Username'},{v:t+'_pass',l:t+' \u2014 Password'}])];
         unmappedHeaders.forEach(h => {
             const detected = accCols.find(a=>a.header===h);
             const autoRole = detected ? detected.role : '__none__';
-
-            html += '<div class="col-map-item">' +
-                '<div class="col-map-label" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="' + esc(h) + '">' + esc(h) + '</div>' +
+            html += '<div class="col-map-item"><div class="col-map-label" title="' + esc(h) + '">' + esc(h) + '</div>' +
                 '<select data-acc-col="' + esc(h) + '" class="' + (autoRole!=='__none__'?'mapped':'') + '">' +
                     roleOptions.map(o=>'<option value="' + esc(o.v) + '"' + (o.v===autoRole?' selected':'') + '>' + esc(o.l) + '</option>').join('') +
                 '</select></div>';
@@ -2023,30 +2002,27 @@ function buildPreviewTable(headers, rows, tableId) {
     const table = document.getElementById(tableId);
     if (!table) return;
     const maxCols = Math.min(headers.length, 10);
-    let html = '<thead><tr>' + headers.slice(0,maxCols).map(h=>'<th>' + esc(h) + '</th>').join('') + (headers.length>maxCols?'<th>…</th>':'') + '</tr></thead>';
+    let html = '<thead><tr>' + headers.slice(0,maxCols).map(h=>'<th>' + esc(h) + '</th>').join('') + (headers.length>maxCols?'<th>\u2026</th>':'') + '</tr></thead>';
     html += '<tbody>';
     rows.forEach(row => {
-        html += '<tr>' + row.slice(0,maxCols).map(c=>'<td title="' + esc(c) + '">' + esc(c) + '</td>').join('') + (headers.length>maxCols?'<td>…</td>':'') + '</tr>';
+        html += '<tr>' + row.slice(0,maxCols).map(c=>'<td title="' + esc(c) + '">' + esc(c) + '</td>').join('') + (headers.length>maxCols?'<td>\u2026</td>':'') + '</tr>';
     });
     html += '</tbody>';
     table.innerHTML = html;
 }
 
-/* ── Build Step 3 UI ── */
 function buildStep3() {
     const parsed = convertRawToClients();
     const existing = clients.length;
     document.getElementById('importSummary').innerHTML =
-        '<div class="sum-card"><div class="sum-num">' + parsed.length + '</div><div class="sum-lbl">Clienti nel file</div></div>' +
-        '<div class="sum-card"><div class="sum-num">' + existing + '</div><div class="sum-lbl">Clienti esistenti</div></div>' +
+        '<div class="sum-card"><div class="sum-num">' + parsed.length + '</div><div class="sum-lbl">Nel file</div></div>' +
+        '<div class="sum-card"><div class="sum-num">' + existing + '</div><div class="sum-lbl">Esistenti</div></div>' +
         '<div class="sum-card"><div class="sum-num">' + parsed.filter(c=>c.accounts&&c.accounts.length>0).length + '</div><div class="sum-lbl">Con account</div></div>';
-
     const previewFields = ['cliente','referente','email','telefono','citta'];
     const table = document.getElementById('finalPreviewTable');
     let html = '<thead><tr>' + previewFields.map(f=>'<th>' + f + '</th>').join('') + '<th>Account</th></tr></thead><tbody>';
     parsed.forEach(c => {
-        html += '<tr>' +
-            previewFields.map(f=>'<td title="' + esc(c[f]||'') + '">' + esc(c[f]||'\u2014') + '</td>').join('') +
+        html += '<tr>' + previewFields.map(f=>'<td title="' + esc(c[f]||'') + '">' + esc(c[f]||'\u2014') + '</td>').join('') +
             '<td>' + ((c.accounts||[]).map(a=>'<span class="badge" style="font-size:9px">' + esc(a.type) + '</span>').join(' ')||'\u2014') + '</td></tr>';
     });
     html += '</tbody>';
@@ -2059,29 +2035,20 @@ function selectMerge(mode) {
     document.getElementById('mopt_replace').classList.toggle('selected', mode==='replace');
 }
 
-/* ── Convert raw rows to client objects ── */
 function convertRawToClients() {
-    const get = (row, header) => header ? (row[importHeaders.indexOf(header)] || '').trim() : '';
-
+    const get = (row, header) => header ? (row[importHeaders.indexOf(header)] || '').toString().trim() : '';
     return importRawData.map(row => {
         const c = {
-            id: uid(), createdAt: Date.now(),
-            cliente:   get(row, importMapping.cliente),
-            referente: get(row, importMapping.referente),
-            email:     get(row, importMapping.email),
-            telefono:  get(row, importMapping.telefono),
-            indirizzo: get(row, importMapping.indirizzo),
-            citta:     get(row, importMapping.citta),
-            provincia: get(row, importMapping.provincia),
-            cap:       get(row, importMapping.cap),
-            note:      get(row, importMapping.note),
-            accounts:  []
+            id: genId(), createdAt: Date.now(),
+            cliente: get(row, importMapping.cliente), referente: get(row, importMapping.referente),
+            email: get(row, importMapping.email), telefono: get(row, importMapping.telefono),
+            indirizzo: get(row, importMapping.indirizzo), citta: get(row, importMapping.citta),
+            provincia: get(row, importMapping.provincia), cap: get(row, importMapping.cap),
+            note: get(row, importMapping.note), accounts: []
         };
-
         const accMap = {};
         (importMapping._accColumns || []).forEach(col => {
-            const val = get(row, col.header);
-            if (!val) return;
+            const val = get(row, col.header); if (!val) return;
             const parts = col.role.split('_');
             const role = parts[parts.length - 1];
             const type = parts.slice(0, -1).join('_');
@@ -2091,33 +2058,24 @@ function convertRawToClients() {
             else if (role === 'pass') accMap[accType].password = val;
         });
         c.accounts = Object.values(accMap).filter(a=>a.username||a.password);
-
         return c;
     }).filter(c => c.cliente);
 }
 
-/* ── Execute import ── */
 async function doTableImport() {
     const parsed = convertRawToClients();
-    if (!parsed.length) {
-        toast('Nessun cliente valido trovato — assicurati di abbinare almeno la colonna "Cliente"', 'err');
-        return;
-    }
-
+    if (!parsed.length) { toast('Nessun cliente valido trovato','err'); return; }
     const btn = document.getElementById('importNextBtn');
-    if (btn) { btn.disabled = true; btn.textContent = '⏳ Importazione…'; }
-
+    if (btn) { btn.disabled = true; btn.textContent = 'Importazione\u2026'; }
     try {
         const toWrite = [];
-
         if (importMergeMode === 'replace') {
             const existing = await db.collection(COL).get();
             if (!existing.empty) {
-                const chunkSize = 500;
                 const delDocs = existing.docs;
-                for (let i = 0; i < delDocs.length; i += chunkSize) {
+                for (let i = 0; i < delDocs.length; i += 500) {
                     const batch = db.batch();
-                    delDocs.slice(i, i + chunkSize).forEach(d => batch.delete(d.ref));
+                    delDocs.slice(i, i + 500).forEach(d => batch.delete(d.ref));
                     await batch.commit();
                 }
             }
@@ -2132,53 +2090,36 @@ async function doTableImport() {
                     const merged = { ...clients[existingMap[key]], ...c, id: clients[existingMap[key]].id };
                     clients[existingMap[key]] = merged;
                     toWrite.push(merged);
-                } else {
-                    clients.push(c);
-                    toWrite.push(c);
-                }
+                } else { clients.push(c); toWrite.push(c); }
             });
         }
-
-        const chunkSize = 500;
-        for (let i = 0; i < toWrite.length; i += chunkSize) {
+        for (let i = 0; i < toWrite.length; i += 500) {
             const batch = db.batch();
-            toWrite.slice(i, i + chunkSize).forEach(c => {
-                batch.set(db.collection(COL).doc(c.id), c);
-            });
+            toWrite.slice(i, i + 500).forEach(c => { batch.set(db.collection(COL).doc(c.id), c); });
             await batch.commit();
         }
-
-        closeModal('importModal');
-        renderGrid();
-        toast(parsed.length + ' clienti importati con successo ✓', 'ok');
-    } catch(e) {
-        toast('Errore importazione: ' + e.message, 'err');
-    } finally {
-        if (btn) { btn.disabled = false; btn.textContent = '✅ Importa Clienti'; }
-    }
+        closeModal('importModal'); renderGrid();
+        toast(parsed.length + ' clienti importati', 'ok');
+    } catch(e) { toast('Errore importazione: ' + e.message, 'err'); }
+    finally { if (btn) { btn.disabled = false; btn.textContent = 'Importa Clienti'; } }
 }
 
-/* ═══════════════════════════════════════════════
-   ── EXPORT / IMPORT JSON ──
-   ═══════════════════════════════════════════════ */
-function exportData() {
-    const blob = new Blob([JSON.stringify(clients, null, 2)], {type:'application/json'});
-    dl(blob, 'clienti_' + today() + '.json');
-    toggleDD(false); toast('Dati esportati','ok');
-}
+/* ── Export ── */
 function exportCSV() {
-    const rows = [['Cliente','Referente','Email','Telefono','Indirizzo','Città','Provincia','CAP','Note','Tipo Account','Username','Password','Nota Account']];
+    const rows = [['Cliente','Referente','Email','Telefono','Indirizzo','Citt\u00e0','Provincia','CAP','Note','Tipo Account','Username','Password','Nota Account']];
     clients.forEach(c => {
         const base = [c.cliente,c.referente,c.email,c.telefono,c.indirizzo,c.citta,c.provincia,c.cap,c.note];
-        if ((c.accounts||[]).length) {
-            c.accounts.forEach(a => rows.push([...base, a.type, a.username, a.password, a.note]));
-        } else {
-            rows.push([...base,'','','','']);
-        }
+        if ((c.accounts||[]).length) { c.accounts.forEach(a => rows.push([...base, a.type, a.username, a.password, a.note])); }
+        else { rows.push([...base,'','','','']); }
     });
     const csv = rows.map(r=>r.map(v=>'"'+(v||'').replace(/"/g,'""')+'"').join(',')).join('\n');
     dl(new Blob(['\ufeff'+csv], {type:'text/csv;charset=utf-8'}), 'clienti_' + today() + '.csv');
     toggleDD(false); toast('CSV esportato','ok');
+}
+function exportJSON() {
+    const blob = new Blob([JSON.stringify(clients, null, 2)], {type:'application/json'});
+    dl(blob, 'clienti_' + today() + '.json');
+    toggleDD(false); toast('JSON esportato','ok');
 }
 function dl(blob, name) {
     const url = URL.createObjectURL(blob);
@@ -2187,7 +2128,13 @@ function dl(blob, name) {
 }
 function today() { return new Date().toISOString().slice(0,10); }
 
-function triggerImportJSON() { document.getElementById('importJSONFile').click(); toggleDD(false); }
+function triggerImportJSON() {
+    const fi = document.getElementById('fileInput');
+    fi.accept = '.json';
+    fi.onchange = handleImportJSON;
+    fi.click();
+    toggleDD(false);
+}
 function handleImportJSON(e) {
     const file = e.target.files[0]; if (!file) return;
     const r = new FileReader();
@@ -2195,80 +2142,89 @@ function handleImportJSON(e) {
         try {
             const data = JSON.parse(ev.target.result);
             if (!Array.isArray(data)) throw new Error();
-            const merge = clients.length > 0 && confirm(
-                'Hai già ' + clients.length + ' client' + (clients.length===1?'e':'i') + '.\n\nOK = Aggiungi ai clienti esistenti\nAnnulla = Sostituisci tutto'
-            );
-
+            const merge = clients.length > 0 && confirm('Hai gi\u00e0 ' + clients.length + ' clienti.\n\nOK = Aggiungi\nAnnulla = Sostituisci tutto');
             const toWrite = [];
             if (merge) {
                 const ids = new Set(clients.map(c=>c.id));
-                data.forEach(c => {
-                    if(!c.id) c.id=uid();
-                    if(!ids.has(c.id)) { clients.push(c); toWrite.push(c); }
-                    else { const i=clients.findIndex(x=>x.id===c.id); if(i!==-1){ clients[i]=c; toWrite.push(c); } }
-                });
+                data.forEach(c => { if(!c.id) c.id=genId(); if(!ids.has(c.id)){clients.push(c);toWrite.push(c);} else{const i=clients.findIndex(x=>x.id===c.id);if(i!==-1){clients[i]=c;toWrite.push(c);}} });
             } else {
                 const existing = await db.collection(COL).get();
                 if (!existing.empty) {
-                    const chunkSize = 500;
-                    const delDocs = existing.docs;
-                    for (let i = 0; i < delDocs.length; i += chunkSize) {
+                    for (let i = 0; i < existing.docs.length; i += 500) {
                         const batch = db.batch();
-                        delDocs.slice(i, i + chunkSize).forEach(d => batch.delete(d.ref));
+                        existing.docs.slice(i, i + 500).forEach(d => batch.delete(d.ref));
                         await batch.commit();
                     }
                 }
-                clients = data.map(c=>({...c, id:c.id||uid()}));
+                clients = data.map(c=>({...c, id:c.id||genId()}));
                 clients.forEach(c => toWrite.push(c));
             }
-
-            const chunkSize = 500;
-            for (let i = 0; i < toWrite.length; i += chunkSize) {
+            for (let i = 0; i < toWrite.length; i += 500) {
                 const batch = db.batch();
-                toWrite.slice(i, i + chunkSize).forEach(c => {
-                    batch.set(db.collection(COL).doc(c.id), c);
-                });
+                toWrite.slice(i, i + 500).forEach(c => { batch.set(db.collection(COL).doc(c.id), c); });
                 await batch.commit();
             }
-
             renderGrid(); toast(data.length + ' clienti importati','ok');
-        } catch(err) { toast('File non valido — assicurati di importare un JSON esportato da questa app','err'); }
+        } catch(err) { toast('File JSON non valido','err'); }
     };
     r.readAsText(file); e.target.value='';
 }
 
-/* ── DROPDOWN ── */
+/* ── Dropdown ── */
 function toggleDD(force) {
     const m = document.getElementById('ddMenu');
     const show = force !== undefined ? force : m.classList.contains('hidden');
     m.classList.toggle('hidden', !show);
 }
 document.addEventListener('click', e => {
-    const ddBtn = document.getElementById('ddBtn');
-    if (ddBtn && !ddBtn.contains(e.target))
+    const dd = document.getElementById('ddData');
+    if (dd && !dd.contains(e.target)) {
         document.getElementById('ddMenu').classList.add('hidden');
+    }
 });
 
-/* ── MODALS HELPERS ── */
+/* ── Modals ── */
 function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-function overlayClick(e, id) { if(e.target===document.getElementById(id)) closeModal(id); }
 
-/* ── TOAST ── */
-function toast(msg, type='') {
+// Click outside to close
+['detailModal','editModal','importModal','changePwdModal'].forEach(id => {
+    document.getElementById(id)?.addEventListener('click', function(e) {
+        if (e.target === this) closeModal(id);
+    });
+});
+
+/* ── Confirm Dialog ── */
+function showConfirm(msg, callback) {
+    document.getElementById('confirmMsg').textContent = msg;
+    confirmCallback = callback;
+    document.getElementById('confirmOverlay').classList.remove('hidden');
+}
+function closeConfirm() {
+    document.getElementById('confirmOverlay').classList.add('hidden');
+    confirmCallback = null;
+}
+document.getElementById('confirmAction').onclick = function() {
+    if (confirmCallback) confirmCallback();
+    closeConfirm();
+};
+
+/* ── Toast ── */
+function toast(msg, type) {
     const w = document.getElementById('toastWrap');
     const el = document.createElement('div');
-    el.className = 'toast' + (type?' '+type:'');
-    el.textContent = (type==='ok'?'✓ ':type==='err'?'✕ ':'') + msg;
+    el.className = 'toast' + (type ? ' ' + type : '');
+    const prefix = type === 'ok' ? '\u2713 ' : type === 'err' ? '\u2717 ' : '';
+    el.textContent = prefix + msg;
     w.appendChild(el);
-    setTimeout(()=>el.remove(), 3500);
+    setTimeout(() => { el.classList.add('toast-exit'); setTimeout(() => el.remove(), 200); }, 3200);
 }
 
-/* ── KEYBOARD ── */
+/* ── Keyboard ── */
 document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') { closeModal('detailModal'); closeModal('editModal'); closeModal('importModal'); closeModal('settingsModal'); closeConfirm(); }
+    if (e.key === 'Escape') {
+        closeModal('detailModal'); closeModal('editModal'); closeModal('importModal'); closeModal('changePwdModal'); closeConfirm();
+    }
 });
-
-/* ── NO init() call needed — auth.onAuthStateChanged handles everything ── */
-</script>
+    </script>
 </body>
 </html>
