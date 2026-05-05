@@ -730,7 +730,7 @@ body {
                 <div class="toolbar">
                     <div class="search-wrapper">
                         <span class="search-icon ic" style="font-size:16px;"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
-                        <input type="text" class="search-input" id="searchInput" placeholder="Cerca clienti per nome, codice, citt\u00e0..." oninput="onSearch()">
+                        <input type="text" class="search-input" id="searchInput" placeholder="Cerca clienti per nome, codice, città..." oninput="onSearch()">
                     </div>
                     <div class="view-toggle">
                         <button class="vt-btn active" id="vtGrid" onclick="setView('grid')"><span class="ic" style="font-size:14px;"><svg viewBox="0 0 24 24"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/></svg></span> Schede</button>
@@ -1117,7 +1117,7 @@ async function createUser() {
         await renderSettings();
     } catch(e) {
         let msg = e.message;
-        if (e.code === 'auth/email-already-in-use') msg = 'Username gi\u00e0 in uso. Prova con uno diverso (es. nome.cognome2)';
+        if (e.code === 'auth/email-already-in-use') msg = 'Username già in uso. Prova con uno diverso (es. nome.cognome2)';
         else if (e.code === 'auth/weak-password') msg = 'Password troppo debole (min. 6 caratteri)';
         else if (e.code === 'auth/invalid-email') msg = 'Username non valido';
         toast('Errore: ' + msg, 'err');
@@ -1135,7 +1135,7 @@ async function toggleUserActive(uid, newState) {
 }
 
 async function deleteSettingsUser(uid, nome) {
-    showConfirm('Eliminare "' + nome + '" dal sistema? L\'utente non potr\u00e0 pi\u00f9 accedere.', async () => {
+    showConfirm('Eliminare "' + nome + '" dal sistema? L\'utente non potrà più accedere.', async () => {
         try {
             await db.collection(COL_USERS).doc(uid).delete();
             toast('Utente "' + nome + '" eliminato', 'ok');
@@ -1242,7 +1242,7 @@ const FIELD_ALIASES = {
     email:['email','e-mail','mail','posta','posta elettronica'],
     telefono:['telefono','tel','phone','cellulare','cell','mobile','fax','contatto telefonico'],
     indirizzo:['indirizzo','address','via','viale','piazza','strada'],
-    citta:['citt\u00e0','citta','city','comune','localita','localit\u00e0'],
+    citta:['città','citta','city','comune','localita','località'],
     provincia:['provincia','prov','province'],
     cap:['cap','zip','codice postale','postal code','postale'],
     note:['note','notes','osservazioni','annotazioni','commenti','memo']
@@ -1511,7 +1511,7 @@ function openDetail(id) {
             dItem('Email', c.email, true) +
             dItem('Telefono', c.telefono) +
             dItem('Indirizzo', c.indirizzo, false, true) +
-            dItem('Citt\u00e0', c.citta) +
+            dItem('Città', c.citta) +
             dItem('Provincia / CAP', [c.provincia,c.cap].filter(Boolean).join(' \u2013 ')) +
         '</div>';
 
@@ -1588,10 +1588,10 @@ function cp(text) {
 function editFromDetail() { closeModal('detailModal'); openEdit(currentId); }
 
 function askDelete() {
-    if (!isAdmin()) { toast('Solo l\'admin pu\u00f2 eliminare', 'err'); return; }
+    if (!isAdmin()) { toast('Solo l\'admin può eliminare', 'err'); return; }
     deleteId = currentId;
     const c = clients.find(x=>x.id===deleteId);
-    showConfirm('Eliminare "' + (c?.cliente||'questo cliente') + '" e tutti i suoi dati? L\'operazione non pu\u00f2 essere annullata.', doDelete);
+    showConfirm('Eliminare "' + (c?.cliente||'questo cliente') + '" e tutti i suoi dati? L\'operazione non può essere annullata.', doDelete);
 }
 
 async function doDelete() {
@@ -1643,8 +1643,8 @@ function buildEditModal(title, c) {
                 '<input class="finput" id="f_telefono" value="' + esc(c.telefono||'') + '" placeholder="+39 000 000 0000"></div>' +
             '<div class="form-group fw"><label class="flabel">Indirizzo</label>' +
                 '<input class="finput" id="f_indirizzo" value="' + esc(c.indirizzo||'') + '" placeholder="Via / Piazza, numero civico"></div>' +
-            '<div class="form-group"><label class="flabel">Citt\u00e0</label>' +
-                '<input class="finput" id="f_citta" value="' + esc(c.citta||'') + '" placeholder="Citt\u00e0"></div>' +
+            '<div class="form-group"><label class="flabel">Città</label>' +
+                '<input class="finput" id="f_citta" value="' + esc(c.citta||'') + '" placeholder="Città"></div>' +
             '<div class="form-group half2">' +
                 '<div><label class="flabel">Provincia</label><input class="finput" id="f_provincia" value="' + esc(c.provincia||'') + '" placeholder="MI" maxlength="5"></div>' +
                 '<div><label class="flabel">CAP</label><input class="finput" id="f_cap" value="' + esc(c.cap||'') + '" placeholder="20100" maxlength="10"></div>' +
@@ -1779,7 +1779,7 @@ function openTableImport(type) {
     html += '<div class="import-step" id="importStep3">' +
         '<div class="step-header"><span class="step-pill">Passo 3 di 3</span><div><div class="step-title">Conferma importazione</div></div></div>' +
         '<div class="import-summary" id="importSummary"></div>' +
-        '<div class="section-title">Modalit\u00e0 importazione</div>' +
+        '<div class="section-title">Modalità importazione</div>' +
         '<div class="merge-options">' +
             '<div class="merge-opt selected" id="mopt_add" onclick="selectMerge(\'add\')">' +
                 '<div class="merge-opt-title">Aggiungi / Unisci</div>' +
@@ -1960,7 +1960,7 @@ function detectAccColumns(headers) {
 
 function buildStep2(filename) {
     document.getElementById('step2Sub').textContent = 'File: ' + filename + ' \u2014 ' + importRawData.length + ' righe trovate.';
-    const FIELD_LABELS = { cliente:'Cliente *', referente:'Referente', email:'Email', telefono:'Telefono', indirizzo:'Indirizzo', citta:'Citt\u00e0', provincia:'Provincia', cap:'CAP', note:'Note' };
+    const FIELD_LABELS = { cliente:'Cliente *', referente:'Referente', email:'Email', telefono:'Telefono', indirizzo:'Indirizzo', citta:'Città', provincia:'Provincia', cap:'CAP', note:'Note' };
     const noneOpt = '<option value="">\u2014 non importare \u2014</option>';
     let html = '<div class="section-title" style="margin-bottom:10px">Campi anagrafici</div><div class="col-map-grid">';
     for (const [field, label] of Object.entries(FIELD_LABELS)) {
@@ -2106,7 +2106,7 @@ async function doTableImport() {
 
 /* ── Export ── */
 function exportCSV() {
-    const rows = [['Cliente','Referente','Email','Telefono','Indirizzo','Citt\u00e0','Provincia','CAP','Note','Tipo Account','Username','Password','Nota Account']];
+    const rows = [['Cliente','Referente','Email','Telefono','Indirizzo','Città','Provincia','CAP','Note','Tipo Account','Username','Password','Nota Account']];
     clients.forEach(c => {
         const base = [c.cliente,c.referente,c.email,c.telefono,c.indirizzo,c.citta,c.provincia,c.cap,c.note];
         if ((c.accounts||[]).length) { c.accounts.forEach(a => rows.push([...base, a.type, a.username, a.password, a.note])); }
@@ -2142,7 +2142,7 @@ function handleImportJSON(e) {
         try {
             const data = JSON.parse(ev.target.result);
             if (!Array.isArray(data)) throw new Error();
-            const merge = clients.length > 0 && confirm('Hai gi\u00e0 ' + clients.length + ' clienti.\n\nOK = Aggiungi\nAnnulla = Sostituisci tutto');
+            const merge = clients.length > 0 && confirm('Hai già ' + clients.length + ' clienti.\n\nOK = Aggiungi\nAnnulla = Sostituisci tutto');
             const toWrite = [];
             if (merge) {
                 const ids = new Set(clients.map(c=>c.id));
