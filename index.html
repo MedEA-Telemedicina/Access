@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Access Clienti – MedEA Telemedicina</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='8' y='6' width='48' height='52' rx='4' fill='%231a56db'/%3E%3Crect x='14' y='12' width='36' height='14' rx='2' fill='%23fff'/%3E%3Crect x='14' y='30' width='36' height='14' rx='2' fill='%23fff'/%3E%3Crect x='28' y='17' width='8' height='4' rx='1' fill='%231a56db'/%3E%3Crect x='28' y='35' width='8' height='4' rx='1' fill='%231a56db'/%3E%3Crect x='14' y='48' width='36' height='4' rx='1' fill='%23fff' opacity='.5'/%3E%3C/svg%3E">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -83,9 +84,9 @@ body {
     box-shadow: 0 25px 60px rgba(0,0,0,0.25);
     animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.login-logo { text-align: center; margin-bottom: 32px; }
-.login-logo img.logo-big { height: 64px; margin-bottom: 20px; }
-.login-title { font-size: 24px; font-weight: 700; color: var(--text); letter-spacing: -0.025em; }
+.login-logo { text-align: center; margin-bottom: 28px; }
+.login-logo img.logo-big { height: 44px; margin-bottom: 10px; }
+.login-title { font-size: 15px; font-weight: 600; color: #1a56db; letter-spacing: 0.04em; }
 .login-subtitle { font-size: 14px; color: var(--text-muted); margin-top: 6px; }
 .login-form { display: flex; flex-direction: column; gap: 16px; }
 .login-error {
@@ -123,7 +124,7 @@ body {
 }
 .header-left { display: flex; align-items: center; gap: 14px; }
 .logo-img { height: 32px; }
-.header h1 { font-size: 17px; font-weight: 700; letter-spacing: -0.02em; color: var(--text); }
+.header h1 { font-size: 15px; font-weight: 600; letter-spacing: 0.04em; color: #1a56db; }
 .header-right { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
 
 /* ── BUTTONS ── */
@@ -155,6 +156,9 @@ body {
 
 .toolbar {
     display: flex; gap: 10px; margin-bottom: 18px; align-items: center; flex-wrap: wrap;
+    position: sticky; top: 60px; z-index: 90;
+    background: rgba(248,250,252,0.95); backdrop-filter: blur(12px);
+    padding: 14px 0; margin-top: -14px;
 }
 .search-wrapper { position: relative; flex: 1; min-width: 240px; }
 .search-icon {
@@ -467,6 +471,40 @@ body {
     color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em;
 }
 
+/* ── REPORT MODAL ── */
+.report-filters { display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px; }
+.report-filter-group { }
+.report-filter-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; }
+.report-filter-group select {
+    width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: var(--radius);
+    font-size: 13px; font-family: inherit; color: var(--text); background: var(--white);
+    outline: none; transition: all var(--transition); cursor: pointer;
+}
+.report-filter-group select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-ring); }
+.report-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.report-chip {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 10px; border-radius: 20px;
+    font-size: 12px; font-weight: 500;
+    background: var(--primary-light); color: var(--primary);
+    animation: fadeIn 0.2s ease;
+}
+.report-chip button {
+    background: none; border: none; cursor: pointer; color: var(--primary);
+    font-size: 14px; line-height: 1; padding: 0 0 0 2px; opacity: 0.7;
+}
+.report-chip button:hover { opacity: 1; }
+.report-summary {
+    background: var(--bg-alt); border-radius: var(--radius); padding: 14px 16px;
+    font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;
+    border: 1px solid var(--border);
+}
+.report-summary strong { color: var(--text); }
+.report-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 16px; }
+.report-col-check { display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; }
+.report-col-check input { accent-color: var(--primary); cursor: pointer; }
+.report-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
 /* ── CONFIRM ── */
 .confirm-overlay {
     position: fixed; inset: 0; background: rgba(15,23,42,0.5);
@@ -737,6 +775,7 @@ body {
                         <button class="vt-btn" id="vtList" onclick="setView('list')"><span class="ic" style="font-size:14px;"><svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></span> Elenco</button>
                     </div>
                     <button class="btn btn-primary" onclick="openNew()"><span class="ic"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></svg></span> Nuovo</button>
+                    <button class="btn btn-outline" id="reportBtn" style="display:none;" onclick="openReportModal()"><span class="ic"><svg viewBox="0 0 24 24"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span> Report</button>
                     <div class="dropdown" id="ddData" style="display:none;">
                         <button class="btn btn-outline" onclick="toggleDD()"><span class="ic"><svg viewBox="0 0 24 24"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg></span> Gestione dati <span class="ic" style="font-size:14px;"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span></button>
                         <div class="dropdown-menu hidden" id="ddMenu">
@@ -806,6 +845,58 @@ body {
             <div class="confirm-actions">
                 <button class="btn btn-outline" onclick="closeConfirm()">Annulla</button>
                 <button class="btn btn-danger" id="confirmAction" onclick="">Conferma</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- REPORT MODAL -->
+    <div class="modal-overlay hidden" id="reportModal">
+        <div class="modal" style="max-width:520px;">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title">Genera Report Excel</div>
+                    <div class="modal-subtitle">Seleziona i filtri e le colonne da includere</div>
+                </div>
+                <button class="btn btn-ghost btn-icon" onclick="closeModal('reportModal')"><span class="ic" style="font-size:18px;"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></span></button>
+            </div>
+            <div class="modal-body">
+                <div class="report-filters">
+                    <div class="report-filter-group">
+                        <label>Regione</label>
+                        <select id="rptRegione" onchange="addReportFilter('regione')">
+                            <option value="">-- Tutte --</option>
+                        </select>
+                        <div class="report-chips" id="rptChipsRegione"></div>
+                    </div>
+                    <div class="report-filter-group">
+                        <label>Provincia</label>
+                        <select id="rptProvincia" onchange="addReportFilter('provincia')">
+                            <option value="">-- Tutte --</option>
+                        </select>
+                        <div class="report-chips" id="rptChipsProvincia"></div>
+                    </div>
+                    <div class="report-filter-group">
+                        <label>Città</label>
+                        <select id="rptCitta" onchange="addReportFilter('citta')">
+                            <option value="">-- Tutte --</option>
+                        </select>
+                        <div class="report-chips" id="rptChipsCitta"></div>
+                    </div>
+                    <div class="report-filter-group">
+                        <label>Referente</label>
+                        <select id="rptReferente" onchange="addReportFilter('referente')">
+                            <option value="">-- Tutti --</option>
+                        </select>
+                        <div class="report-chips" id="rptChipsReferente"></div>
+                    </div>
+                </div>
+                <div class="report-summary" id="rptSummary">Clienti inclusi: <strong>0</strong></div>
+                <div style="font-size:12px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;">Colonne da esportare</div>
+                <div class="report-columns" id="rptColumns"></div>
+                <div class="report-actions">
+                    <button class="btn btn-outline" onclick="closeModal('reportModal')">Annulla</button>
+                    <button class="btn btn-primary" id="rptDownloadBtn" onclick="downloadReport()"><span class="ic"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span> Scarica Excel</button>
+                </div>
             </div>
         </div>
     </div>
@@ -1007,6 +1098,7 @@ function updateHeaderUser() {
     badge.innerHTML = '<span class="user-role-pill ' + roleClass + '">' + roleLabel + '</span> ' + esc(name);
     document.getElementById('settingsBtn').style.display = currentAppUser.ruolo === 'admin' ? '' : 'none';
     document.getElementById('ddData').style.display = currentAppUser.ruolo === 'admin' ? '' : 'none';
+    document.getElementById('reportBtn').style.display = currentAppUser.ruolo === 'admin' ? '' : 'none';
 }
 
 function isAdmin() { return currentAppUser && currentAppUser.ruolo === 'admin'; }
@@ -1280,9 +1372,11 @@ async function load() {
     try {
         const snap = await db.collection(COL).get();
         clients = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        buildSearchIndex();
     } catch(e) {
         console.error('Firebase load error:', e);
         clients = [];
+        _searchIndex.clear();
         toast('Errore connessione Firebase: ' + e.message, 'err');
     }
 }
@@ -1322,7 +1416,11 @@ function setView(mode) {
     renderGrid();
 }
 
-function onSearch() { renderGrid(); }
+let _searchTimer = null;
+function onSearch() {
+    if (_searchTimer) clearTimeout(_searchTimer);
+    _searchTimer = setTimeout(renderGrid, 150);
+}
 
 function setLetter(letter) { activeLetter = (activeLetter === letter) ? null : letter; renderGrid(); }
 function clearLetter() { activeLetter = null; renderGrid(); }
@@ -1345,21 +1443,30 @@ function buildAlphabetSidebar(presentLetters) {
     sidebar.innerHTML = html;
 }
 
+/* ── Search index for fast filtering ── */
+let _searchIndex = new Map();
+function buildSearchIndex() {
+    _searchIndex.clear();
+    clients.forEach(c => {
+        const parts = [c.cliente,c.referente,c.email,c.telefono,c.citta,c.indirizzo,c.note,c.provincia,c.cap];
+        if (c.accounts) c.accounts.forEach(a => { parts.push(a.username, a.type); });
+        _searchIndex.set(c.id, parts.map(f => (f||'').toLowerCase()).join(' '));
+    });
+}
+
 /* ── Render Grid ── */
 function renderGrid() {
     const searchEl = document.getElementById('searchInput');
     if (!searchEl) return;
     const q = (searchEl.value || '').toLowerCase().trim();
 
+    if (_searchIndex.size !== clients.length) buildSearchIndex();
+
     let filtered = q
-        ? clients.filter(c =>
-            [c.cliente,c.referente,c.email,c.telefono,c.citta,c.indirizzo,c.note]
-            .some(f => (f||'').toLowerCase().includes(q)) ||
-            (c.accounts||[]).some(a =>
-                (a.username||'').toLowerCase().includes(q) ||
-                (a.type||'').toLowerCase().includes(q)
-            )
-          )
+        ? clients.filter(c => {
+            const idx = _searchIndex.get(c.id);
+            return idx && idx.includes(q);
+          })
         : clients.slice();
 
     filtered.sort((a, b) => {
@@ -1601,6 +1708,7 @@ async function doDelete() {
     try {
         await db.collection(COL).doc(idToDelete).delete();
         clients = clients.filter(c=>c.id!==idToDelete);
+        buildSearchIndex();
         closeModal('detailModal');
         renderGrid();
         toast('Cliente eliminato','ok');
@@ -1732,6 +1840,7 @@ async function saveClient() {
             await db.collection(COL).doc(docId).set(data);
             clients.push(data);
         }
+        buildSearchIndex();
         closeModal('editModal'); renderGrid();
         toast(editingId ? 'Cliente aggiornato' : 'Cliente aggiunto', 'ok');
     } catch(e) {
@@ -2098,6 +2207,7 @@ async function doTableImport() {
             toWrite.slice(i, i + 500).forEach(c => { batch.set(db.collection(COL).doc(c.id), c); });
             await batch.commit();
         }
+        buildSearchIndex();
         closeModal('importModal'); renderGrid();
         toast(parsed.length + ' clienti importati', 'ok');
     } catch(e) { toast('Errore importazione: ' + e.message, 'err'); }
@@ -2164,7 +2274,7 @@ function handleImportJSON(e) {
                 toWrite.slice(i, i + 500).forEach(c => { batch.set(db.collection(COL).doc(c.id), c); });
                 await batch.commit();
             }
-            renderGrid(); toast(data.length + ' clienti importati','ok');
+            buildSearchIndex(); renderGrid(); toast(data.length + ' clienti importati','ok');
         } catch(err) { toast('File JSON non valido','err'); }
     };
     r.readAsText(file); e.target.value='';
@@ -2187,7 +2297,7 @@ document.addEventListener('click', e => {
 function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
 // Click outside to close
-['detailModal','editModal','importModal','changePwdModal'].forEach(id => {
+['detailModal','editModal','importModal','changePwdModal','reportModal'].forEach(id => {
     document.getElementById(id)?.addEventListener('click', function(e) {
         if (e.target === this) closeModal(id);
     });
@@ -2219,10 +2329,181 @@ function toast(msg, type) {
     setTimeout(() => { el.classList.add('toast-exit'); setTimeout(() => el.remove(), 200); }, 3200);
 }
 
+/* ── Report Excel ── */
+const RPT_FIELDS = [
+    { key:'cliente',    label:'Cliente',    default:true },
+    { key:'referente',  label:'Referente',  default:true },
+    { key:'email',      label:'Email',      default:true },
+    { key:'telefono',   label:'Telefono',   default:true },
+    { key:'indirizzo',  label:'Indirizzo',  default:true },
+    { key:'citta',      label:'Città',      default:true },
+    { key:'provincia',  label:'Provincia',  default:true },
+    { key:'regione',    label:'Regione',    default:true, computed:true },
+    { key:'cap',        label:'CAP',        default:false },
+    { key:'codice',     label:'Codice',     default:false },
+    { key:'note',       label:'Note',       default:false }
+];
+/* ── Province → Regioni ── */
+const PROV_REGIONE = {
+    'TO':'Piemonte','VC':'Piemonte','NO':'Piemonte','CN':'Piemonte','AT':'Piemonte','AL':'Piemonte','BI':'Piemonte','VB':'Piemonte',
+    'AO':"Valle d'Aosta",
+    'VA':'Lombardia','CO':'Lombardia','SO':'Lombardia','MI':'Lombardia','BG':'Lombardia','BS':'Lombardia','PV':'Lombardia','CR':'Lombardia','MN':'Lombardia','LC':'Lombardia','LO':'Lombardia','MB':'Lombardia',
+    'BZ':'Trentino-Alto Adige','TN':'Trentino-Alto Adige',
+    'VR':'Veneto','VI':'Veneto','BL':'Veneto','TV':'Veneto','VE':'Veneto','PD':'Veneto','RO':'Veneto',
+    'UD':'Friuli Venezia Giulia','GO':'Friuli Venezia Giulia','TS':'Friuli Venezia Giulia','PN':'Friuli Venezia Giulia',
+    'IM':'Liguria','SV':'Liguria','GE':'Liguria','SP':'Liguria',
+    'PC':'Emilia-Romagna','PR':'Emilia-Romagna','RE':'Emilia-Romagna','MO':'Emilia-Romagna','BO':'Emilia-Romagna','FE':'Emilia-Romagna','RA':'Emilia-Romagna','FC':'Emilia-Romagna','RN':'Emilia-Romagna',
+    'MS':'Toscana','LU':'Toscana','PT':'Toscana','FI':'Toscana','LI':'Toscana','PI':'Toscana','AR':'Toscana','SI':'Toscana','GR':'Toscana','PO':'Toscana',
+    'PG':'Umbria','TR':'Umbria',
+    'PU':'Marche','AN':'Marche','MC':'Marche','AP':'Marche','FM':'Marche',
+    'VT':'Lazio','RI':'Lazio','RM':'Lazio','LT':'Lazio','FR':'Lazio',
+    'AQ':'Abruzzo','TE':'Abruzzo','PE':'Abruzzo','CH':'Abruzzo',
+    'CB':'Molise','IS':'Molise',
+    'CE':'Campania','BN':'Campania','NA':'Campania','AV':'Campania','SA':'Campania',
+    'FG':'Puglia','BA':'Puglia','TA':'Puglia','BR':'Puglia','LE':'Puglia','BT':'Puglia',
+    'PZ':'Basilicata','MT':'Basilicata',
+    'CS':'Calabria','CZ':'Calabria','KR':'Calabria','VV':'Calabria','RC':'Calabria',
+    'TP':'Sicilia','PA':'Sicilia','ME':'Sicilia','AG':'Sicilia','CL':'Sicilia','EN':'Sicilia','CT':'Sicilia','RG':'Sicilia','SR':'Sicilia',
+    'SS':'Sardegna','NU':'Sardegna','CA':'Sardegna','OR':'Sardegna','SU':'Sardegna','OT':'Sardegna','OG':'Sardegna','CI':'Sardegna','VS':'Sardegna'
+};
+
+/* Normalizzazione testi per deduplicazione */
+function normTitle(s) {
+    if (!s) return '';
+    return s.trim().replace(/\s+/g,' ').split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+}
+function normProv(s) { return s ? s.trim().toUpperCase().replace(/[^A-Z]/g,'') : ''; }
+function getRegione(c) { return PROV_REGIONE[normProv(c.provincia)] || ''; }
+
+let rptFilters = { regione: [], citta: [], provincia: [], referente: [] };
+
+function openReportModal() {
+    rptFilters = { regione: [], citta: [], provincia: [], referente: [] };
+    populateReportDropdowns();
+    renderReportChips();
+    renderReportColumns();
+    updateReportSummary();
+    document.getElementById('reportModal').classList.remove('hidden');
+}
+
+function populateReportDropdowns() {
+    const vals = { regione: new Set(), citta: new Set(), provincia: new Set(), referente: new Set() };
+    clients.forEach(c => {
+        const city = normTitle(c.citta); if (city) vals.citta.add(city);
+        const prov = normProv(c.provincia); if (prov) vals.provincia.add(prov);
+        const ref = normTitle(c.referente); if (ref) vals.referente.add(ref);
+        const reg = getRegione(c); if (reg) vals.regione.add(reg);
+    });
+    const keys = ['regione','citta','provincia','referente'];
+    const labels = { regione:'-- Tutte --', citta:'-- Tutte --', provincia:'-- Tutte --', referente:'-- Tutti --' };
+    keys.forEach(key => {
+        const sel = document.getElementById('rpt' + key.charAt(0).toUpperCase() + key.slice(1));
+        const sorted = Array.from(vals[key]).sort((a,b) => a.localeCompare(b,'it'));
+        sel.innerHTML = '<option value="">' + labels[key] + '</option>' +
+            sorted.map(v => '<option value="' + esc(v) + '">' + esc(v) + '</option>').join('');
+    });
+}
+
+function addReportFilter(key) {
+    const selId = 'rpt' + key.charAt(0).toUpperCase() + key.slice(1);
+    const sel = document.getElementById(selId);
+    const val = sel.value;
+    if (!val || rptFilters[key].includes(val)) { sel.value = ''; return; }
+    rptFilters[key].push(val);
+    sel.value = '';
+    renderReportChips();
+    updateReportSummary();
+}
+
+function removeReportFilter(key, val) {
+    rptFilters[key] = rptFilters[key].filter(v => v !== val);
+    renderReportChips();
+    updateReportSummary();
+}
+
+function renderReportChips() {
+    ['regione','citta','provincia','referente'].forEach(key => {
+        const container = document.getElementById('rptChips' + key.charAt(0).toUpperCase() + key.slice(1));
+        container.innerHTML = rptFilters[key].map(v =>
+            '<span class="report-chip">' + esc(v) +
+            '<button onclick="removeReportFilter(\'' + key + '\',\'' + esc(v).replace(/'/g,"\\'") + '\')">\u2715</button></span>'
+        ).join('');
+    });
+}
+
+function renderReportColumns() {
+    const container = document.getElementById('rptColumns');
+    container.innerHTML = RPT_FIELDS.map(f =>
+        '<label class="report-col-check">' +
+        '<input type="checkbox" id="rptCol_' + f.key + '"' + (f.default ? ' checked' : '') + ' onchange="updateReportSummary()">' +
+        f.label + '</label>'
+    ).join('');
+}
+
+function getFilteredReportClients() {
+    return clients.filter(c => {
+        if (rptFilters.regione.length && !rptFilters.regione.includes(getRegione(c))) return false;
+        if (rptFilters.citta.length && !rptFilters.citta.includes(normTitle(c.citta))) return false;
+        if (rptFilters.provincia.length && !rptFilters.provincia.includes(normProv(c.provincia))) return false;
+        if (rptFilters.referente.length && !rptFilters.referente.includes(normTitle(c.referente))) return false;
+        return true;
+    });
+}
+
+function updateReportSummary() {
+    const filtered = getFilteredReportClients();
+    const cols = RPT_FIELDS.filter(f => document.getElementById('rptCol_' + f.key)?.checked);
+    const el = document.getElementById('rptSummary');
+    const hasFilters = rptFilters.regione.length || rptFilters.citta.length || rptFilters.provincia.length || rptFilters.referente.length;
+    el.innerHTML = 'Clienti inclusi: <strong>' + filtered.length + '</strong> di ' + clients.length +
+        (hasFilters ? '' : ' (nessun filtro attivo)') +
+        ' &middot; Colonne: <strong>' + cols.length + '</strong>';
+    document.getElementById('rptDownloadBtn').disabled = filtered.length === 0;
+}
+
+
+function downloadReport() {
+    const filtered = getFilteredReportClients();
+    if (!filtered.length) { toast('Nessun cliente corrisponde ai filtri', 'err'); return; }
+    const cols = RPT_FIELDS.filter(f => document.getElementById('rptCol_' + f.key)?.checked);
+    if (!cols.length) { toast('Seleziona almeno una colonna', 'err'); return; }
+
+    const rows = [cols.map(c => c.label)];
+    filtered.sort((a,b) => (a.cliente||'').localeCompare(b.cliente||'','it'));
+    function getCellVal(c, col) {
+        if (col.key === 'regione') return getRegione(c);
+        return c[col.key] || '';
+    }
+    filtered.forEach(c => {
+        rows.push(cols.map(col => getCellVal(c, col)));
+    });
+
+    const ws = XLSX.utils.aoa_to_sheet(rows);
+
+    // Auto column widths
+    ws['!cols'] = cols.map((col, i) => {
+        let max = col.label.length;
+        filtered.forEach(c => { const v = (getCellVal(c, col)).toString(); if (v.length > max) max = v.length; });
+        return { wch: Math.min(max + 2, 50) };
+    });
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Report Clienti');
+
+    const now = new Date();
+    const dateStr = now.getFullYear() + '' +
+        String(now.getMonth()+1).padStart(2,'0') +
+        String(now.getDate()).padStart(2,'0');
+    XLSX.writeFile(wb, 'report_clienti_' + dateStr + '.xlsx');
+
+    toast('Report scaricato: ' + filtered.length + ' clienti, ' + cols.length + ' colonne', 'ok');
+    closeModal('reportModal');
+}
+
 /* ── Keyboard ── */
 document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
-        closeModal('detailModal'); closeModal('editModal'); closeModal('importModal'); closeModal('changePwdModal'); closeConfirm();
+        closeModal('detailModal'); closeModal('editModal'); closeModal('importModal'); closeModal('changePwdModal'); closeModal('reportModal'); closeConfirm();
     }
 });
     </script>
