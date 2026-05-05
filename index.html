@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -614,7 +615,7 @@
         </div>
         <button class="btn btn-outline" onclick="changeMyPassword()">🔑 Cambia Password</button>
         <button class="btn btn-outline" id="settingsBtn" onclick="openSettings()" style="display:none">⚙️ Impostazioni</button>
-        <div class="dropdown">
+        <div class="dropdown" id="ddWrapper" style="display:none">
             <button class="btn btn-outline" id="ddBtn" onclick="toggleDD()">📂 Gestione dati</button>
             <div class="dropdown-menu hidden" id="ddMenu">
                 <div class="dd-label">Importa</div>
@@ -1006,6 +1007,7 @@ function updateHeaderUser() {
     rolePill.className = 'user-role-pill ' + currentAppUser.ruolo;
     // Show settings button only for admin
     document.getElementById('settingsBtn').style.display = currentAppUser.ruolo === 'admin' ? '' : 'none';
+    document.getElementById('ddWrapper').style.display = currentAppUser.ruolo === 'admin' ? '' : 'none';
 }
 
 function isAdmin() { return currentAppUser && currentAppUser.ruolo === 'admin'; }
