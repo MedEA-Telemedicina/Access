@@ -1327,7 +1327,7 @@ async function togglePin(clientId, event) {
 /* ═══════════════════════════════════════════════
    DATA
    ═══════════════════════════════════════════════ */
-const ACCOUNT_TYPES = ['MEGA','ARUBA','WECARDIO','ECG','DERMATOLOGIA','ID Apple','Spirometria','Gmail','Mail','Altro'];
+const ACCOUNT_TYPES = ['MEGA','ARUBA','WECARDIO','ECG','DERMATOLOGIA','ID Apple','Spirometria','Gmail','Mail','Medea Tools','Medea 3','Altro'];
 const FIELD_ALIASES = {
     cliente:['cliente','nome','azienda','studio','company','name','ragione sociale','ragione_sociale','denominazione'],
     referente:['referente','contatto','contact','responsabile','cognome','nome referente'],
@@ -1779,12 +1779,23 @@ function buildEditModal(title, c) {
 function renderAccForm() {
     const list = document.getElementById('accFormList');
     if (!list) return;
-    list.innerHTML = editAccounts.map((acc, i) =>
-        '<div class="acc-form-item" id="afi_' + i + '">' +
+    list.innerHTML = editAccounts.map((acc, i) => {
+        const isCustom = acc.type && !ACCOUNT_TYPES.includes(acc.type);
+        const selectVal = isCustom ? 'Altro' : acc.type;
+        const showCustomInput = isCustom || acc.type === 'Altro';
+        return '<div class="acc-form-item" id="afi_' + i + '">' +
             '<div class="acc-form-header">' +
-                '<select class="fselect" style="flex:1;max-width:175px" onchange="updAcc(' + i + ',\'type\',this.value)">' +
-                    ACCOUNT_TYPES.map(t=>'<option value="' + esc(t) + '"' + (acc.type===t?' selected':'') + '>' + esc(t) + '</option>').join('') +
+                '<div style="flex:1;display:flex;flex-direction:column;gap:6px;max-width:175px">' +
+                '<select class="fselect" style="width:100%" onchange="handleAccTypeChange(' + i + ',this.value)">' +
+                    ACCOUNT_TYPES.map(t=>'<option value="' + esc(t) + '"' + (t===selectVal?' selected':'') + '>' + esc(t) + '</option>').join('') +
                 '</select>' +
+                (showCustomInput ?
+                    '<div style="display:flex;gap:4px;align-items:center">' +
+                    '<input class="finput" id="custom_type_' + i + '" placeholder="Nome account personalizzato" value="' + (isCustom ? esc(acc.type) : '') + '" style="flex:1;font-size:13px" oninput="updAcc(' + i + ',\'pendingCustomType\',this.value)" onkeydown="if(event.key===\'Enter\'){confirmCustomType(' + i + ')}"/>' +
+                    '<button type="button" onclick="confirmCustomType(' + i + ')" style="background:var(--primary);color:#fff;border:none;border-radius:6px;padding:0 10px;height:36px;cursor:pointer;font-size:12px;white-space:nowrap">Aggiungi</button>' +
+                    '</div>'
+                    : '') +
+                '</div>' +
                 '<button type="button" style="margin-left:auto;background:none;border:none;cursor:pointer;color:var(--danger);padding:4px;border-radius:6px;display:flex;" onclick="rmAcc(' + i + ')">' + ic('x',16) + '</button>' +
             '</div>' +
             '<div class="acc-form-row">' +
@@ -1798,8 +1809,8 @@ function renderAccForm() {
             '</div>' +
             '<div class="form-group" style="margin-top:8px"><label class="flabel">Nota account</label>' +
                 '<input class="finput" value="' + esc(acc.note||'') + '" oninput="updAcc(' + i + ',\'note\',this.value)" placeholder="es. account principale"></div>' +
-        '</div>'
-    ).join('');
+        '</div>';
+    }).join('');
 }
 
 function addAcc() {
@@ -1809,6 +1820,28 @@ function addAcc() {
 }
 function rmAcc(i) { editAccounts.splice(i,1); renderAccForm(); }
 function updAcc(i,f,v) { if(editAccounts[i]) editAccounts[i][f]=v; }
+function handleAccTypeChange(i, val) {
+    if (!editAccounts[i]) return;
+    editAccounts[i].type = val;
+    editAccounts[i].pendingCustomType = '';
+    renderAccForm();
+    if (val === 'Altro') {
+        setTimeout(() => { const inp = document.getElementById('custom_type_' + i); if (inp) inp.focus(); }, 50);
+    }
+}
+function confirmCustomType(i) {
+    const acc = editAccounts[i];
+    if (!acc) return;
+    const inp = document.getElementById('custom_type_' + i);
+    const val = (inp ? inp.value : acc.pendingCustomType || '').trim();
+    if (!val) return;
+    if (!ACCOUNT_TYPES.includes(val)) {
+        ACCOUNT_TYPES.splice(ACCOUNT_TYPES.length - 1, 0, val);
+    }
+    acc.type = val;
+    delete acc.pendingCustomType;
+    renderAccForm();
+}
 function toggleFormPwd(i) { const el=document.getElementById('fp_'+i); if(el) el.type=el.type==='password'?'text':'password'; }
 
 async function saveClient() {
