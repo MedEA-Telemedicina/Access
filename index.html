@@ -126,6 +126,30 @@ body {
 .logo-img { height: 32px; }
 .header h1 { font-size: 15px; font-weight: 600; letter-spacing: 0.04em; color: #1a56db; }
 .header-right { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.user-badge-btn {
+    cursor: pointer;
+    background: rgba(37,99,235,0.08);
+    border: 1px solid rgba(37,99,235,0.18);
+    border-radius: 20px;
+    padding: 4px 12px 4px 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    transition: background 0.15s, box-shadow 0.15s;
+    display: flex; align-items: center; gap: 6px;
+}
+.user-badge-btn:hover {
+    background: rgba(37,99,235,0.15);
+    box-shadow: 0 2px 8px rgba(37,99,235,0.15);
+}
+.user-badge-btn::before {
+    content: '';
+    display: inline-block;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #22c55e;
+    flex-shrink: 0;
+}
 
 /* ── BUTTONS ── */
 .btn {
@@ -695,6 +719,60 @@ body {
     .client-grid { grid-template-columns: 1fr; }
 }
 
+
+/* ── PERSONAL CARD SECTION ── */
+.personal-card-section {
+    margin-bottom: 20px;
+}
+.personal-card-hd {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 10.5px; font-weight: 700; color: var(--primary);
+    letter-spacing: 0.09em; text-transform: uppercase; margin-bottom: 10px;
+}
+.personal-card-wrap {
+    display: inline-block;
+}
+.personal-card {
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+    color: white; border-radius: var(--radius-lg);
+    padding: 18px 20px 16px; cursor: pointer;
+    position: relative; overflow: hidden;
+    transition: transform var(--transition), box-shadow var(--transition);
+    box-shadow: 0 4px 16px rgba(37,99,235,0.28);
+    display: flex; flex-direction: column; gap: 6px;
+    min-width: 230px; max-width: 340px;
+    border: none; text-align: left;
+}
+.personal-card::before {
+    content: ''; position: absolute; top: -30px; right: -30px;
+    width: 100px; height: 100px; border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+}
+.personal-card:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(37,99,235,0.38); }
+.pc-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; opacity: 0.65; text-transform: uppercase; }
+.pc-name { font-size: 17px; font-weight: 700; letter-spacing: -0.01em; }
+.pc-role { font-size: 12px; opacity: 0.72; margin-top: 1px; }
+.pc-acc-row { display: flex; align-items: center; gap: 6px; margin-top: 6px; }
+.pc-acc-badge {
+    background: rgba(255,255,255,0.18); border-radius: 20px;
+    padding: 2px 8px; font-size: 11px; font-weight: 600;
+}
+.pc-edit-btn {
+    position: absolute; top: 12px; right: 12px;
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2);
+    color: white; border-radius: 6px; padding: 4px 9px;
+    cursor: pointer; font-size: 11px; font-weight: 600;
+    transition: background var(--transition); display: flex; align-items: center; gap: 4px;
+}
+.pc-edit-btn:hover { background: rgba(255,255,255,0.28); }
+/* Personal Card Modal */
+.pc-modal-header {
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+    color: white; padding: 24px 28px 20px; border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    margin: -28px -28px 24px;
+}
+.pc-modal-title { font-size: 20px; font-weight: 700; }
+.pc-modal-sub { font-size: 13px; opacity: 0.75; margin-top: 3px; }
     </style>
 </head>
 <body>
@@ -718,6 +796,12 @@ body {
                         <input type="password" id="loginPwd" class="finput" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
                         <button type="button" class="pwd-eye" onclick="toggleLoginPwd()"><span class="ic" style="font-size:16px"><svg viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></span></button>
                     </div>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-top:-4px;">
+                    <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:13px;color:var(--text-secondary);user-select:none;">
+                        <input type="checkbox" id="rememberMe" style="width:15px;height:15px;accent-color:var(--primary);cursor:pointer;">
+                        Ricordami
+                    </label>
                 </div>
                 <button id="loginBtn" class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;font-size:14px;margin-top:4px;" onclick="doLogin()">Accedi</button>
             </div>
@@ -754,7 +838,7 @@ body {
                 <h1>Access Clienti</h1>
             </div>
             <div class="header-right">
-                <span id="userBadge" class="user-badge"></span>
+                <button id="userBadge" class="user-badge user-badge-btn" onclick="openPersonalCard()" title="La mia scheda personale"></button>
                 <button class="btn btn-ghost btn-icon" title="Cambia password" onclick="openChangePwd()"><span class="ic" style="font-size:16px;"><svg viewBox="0 0 24 24"><path d="m21 2-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.78 7.78 5.5 5.5 0 0 1 7.78-7.78Zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg></span></button>
                 <button id="settingsBtn" class="btn btn-ghost btn-icon" style="display:none;" title="Impostazioni" onclick="switchTab('settings')"><span class="ic" style="font-size:16px;"><svg viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span></button>
                 <button class="btn btn-ghost btn-icon" title="Esci" onclick="doLogout()"><span class="ic" style="font-size:16px;"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span></button>
@@ -791,6 +875,7 @@ body {
                     </div>
                 </div>
                 <div id="alphaStats" class="stats"></div>
+                
                 <div class="content-area">
                     <div class="clients-area" id="clientsArea"></div>
                     <div class="alpha-sidebar" id="alphaSidebar"></div>
@@ -901,6 +986,17 @@ body {
         </div>
     </div>
 
+
+    <!-- PERSONAL CARD DETAIL MODAL -->
+    <div class="modal-overlay hidden" id="pcDetailModal">
+        <div class="modal" id="pcDetailContent" style="max-width:520px;padding:28px;"></div>
+    </div>
+
+    <!-- PERSONAL CARD EDIT MODAL -->
+    <div class="modal-overlay hidden" id="pcEditModal">
+        <div class="modal modal-xl" id="pcEditContent" style="padding:28px;"></div>
+    </div>
+
     <!-- TOAST -->
     <div class="toast-wrap" id="toastWrap"></div>
 
@@ -1003,6 +1099,7 @@ auth.onAuthStateChanged(async (firebaseUser) => {
                     return;
                 }
                 pinnedClientIds = new Set(data.pinnedClients || []);
+                personalCardAccounts = (data.personalCard && data.personalCard.accounts) ? data.personalCard.accounts : [];
             } else {
                 // First user ever -> auto-create as admin
                 const allUsersSnap = await db.collection(COL_USERS).limit(1).get();
@@ -1020,6 +1117,7 @@ auth.onAuthStateChanged(async (firebaseUser) => {
             }
             hideLoginOverlay();
             updateHeaderUser();
+            renderPersonalCardArea();
             isLoading = true;
             renderGrid();
             await load();
@@ -1042,6 +1140,17 @@ auth.onAuthStateChanged(async (firebaseUser) => {
 function showLoginOverlay() {
     document.getElementById('loginOverlay').classList.remove('hidden');
     document.getElementById('appUI').style.display = 'none';
+    // Ripristina username salvato e spunta "Ricordami"
+    const saved = localStorage.getItem('savedUsername');
+    const rem   = localStorage.getItem('rememberMe') === '1';
+    if (saved) {
+        const inp = document.getElementById('loginUser');
+        const cb  = document.getElementById('rememberMe');
+        if (inp) inp.value = saved;
+        if (cb)  cb.checked = rem;
+        // Se ricordami era attivo, porta il focus sulla password
+        if (rem) setTimeout(() => { const p = document.getElementById('loginPwd'); if(p) p.focus(); }, 80);
+    }
 }
 function hideLoginOverlay() {
     document.getElementById('loginOverlay').classList.add('hidden');
@@ -1063,15 +1172,32 @@ function toggleLoginPwd() {
 async function doLogin() {
     const username = (document.getElementById('loginUser').value || '').trim().toLowerCase().replace(/\s+/g, '');
     const pwd = document.getElementById('loginPwd').value;
+    const rememberCb = document.getElementById('rememberMe');
+    const remember = rememberCb ? rememberCb.checked : false;
     if (!username || !pwd) { setLoginError('Inserisci username e password'); return; }
     clearLoginError();
     const email = username + '@access.local';
     const btn = document.getElementById('loginBtn');
-    btn.classList.add('login-btn-loading');
-    btn.innerHTML = 'Accesso in corso\u2026';
+    btn.disabled = true;
+    btn.textContent = 'Accesso in corso…';
     try {
+        // Imposta persistenza (non-blocking: se fallisce continua comunque)
+        try {
+            await auth.setPersistence(remember ? 'local' : 'session');
+        } catch(pe) { console.warn('setPersistence error (non-blocking):', pe); }
+
         await auth.signInWithEmailAndPassword(email, pwd);
+
+        // Salva username se "Ricordami" è spuntato
+        if (remember) {
+            localStorage.setItem('savedUsername', username);
+            localStorage.setItem('rememberMe', '1');
+        } else {
+            localStorage.removeItem('savedUsername');
+            localStorage.removeItem('rememberMe');
+        }
     } catch(e) {
+        console.error('Login error:', e.code, e.message);
         let msg = 'Credenziali non valide';
         if (e.code === 'auth/user-not-found' || e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential')
             msg = 'Username o password errati';
@@ -1079,10 +1205,12 @@ async function doLogin() {
             msg = 'Username non valido (usa solo lettere, numeri, punti)';
         else if (e.code === 'auth/too-many-requests')
             msg = 'Troppi tentativi. Riprova tra qualche minuto.';
+        else
+            msg = 'Errore: ' + (e.message || e.code || 'sconosciuto');
         setLoginError(msg);
     } finally {
-        btn.classList.remove('login-btn-loading');
-        btn.innerHTML = 'Accedi';
+        btn.disabled = false;
+        btn.textContent = 'Accedi';
     }
 }
 
@@ -1149,6 +1277,7 @@ async function renderSettings() {
 
             if (!isMe) {
                 html += '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">';
+                html += '<button class="btn btn-ghost btn-sm" onclick="openEditUserName(\'' + u.uid + '\',\'' + esc(u.nome || u.username || '').replace(/'/g, "\\'") + '\')">' + ic('edit',12) + ' Rinomina</button>';
                 if (u.attivo) {
                     html += '<button class="btn btn-outline btn-sm" onclick="toggleUserActive(\'' + u.uid + '\',false)">Disabilita</button>';
                 } else {
@@ -1179,6 +1308,54 @@ async function renderSettings() {
         container.innerHTML = html;
     } catch(e) {
         container.innerHTML = '<div style="padding:40px;text-align:center;color:var(--danger);">Errore: ' + esc(e.message) + '</div>';
+    }
+}
+
+function openEditUserName(uid, currentName) {
+    // Crea modal inline
+    const existingModal = document.getElementById('editNameModal');
+    if (existingModal) existingModal.remove();
+
+    const overlay = document.createElement('div');
+    overlay.id = 'editNameModal';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:9999;display:flex;align-items:center;justify-content:center;';
+    overlay.innerHTML =
+        '<div style="background:var(--white);border-radius:var(--radius-lg);padding:28px 28px 24px;width:360px;max-width:95vw;box-shadow:0 8px 40px rgba(0,0,0,0.18);">' +
+        '<div style="font-size:16px;font-weight:700;margin-bottom:4px;">Modifica nome utente</div>' +
+        '<div style="font-size:13px;color:var(--text-muted);margin-bottom:18px;">Modifica il nome visualizzato nell\'app</div>' +
+        '<div class="form-group"><label class="flabel">Nome</label>' +
+        '<input class="finput" id="editNameInput" value="' + currentName.replace(/"/g,'&quot;') + '" placeholder="Nome e Cognome" style="margin-bottom:0;">' +
+        '</div>' +
+        '<div style="display:flex;gap:8px;margin-top:18px;justify-content:flex-end;">' +
+        '<button class="btn btn-ghost" onclick="document.getElementById(\'editNameModal\').remove()">Annulla</button>' +
+        '<button class="btn btn-primary" id="saveEditNameBtn" onclick="saveEditUserName(\'' + uid + '\')"' + '>Salva</button>' +
+        '</div>' +
+        '</div>';
+    document.body.appendChild(overlay);
+    // Chiudi cliccando fuori
+    overlay.addEventListener('click', function(e){ if(e.target===overlay) overlay.remove(); });
+    // Focus
+    setTimeout(()=>{ const inp=document.getElementById('editNameInput'); if(inp){inp.focus();inp.select();} },50);
+}
+
+async function saveEditUserName(uid) {
+    const newName = (document.getElementById('editNameInput').value || '').trim();
+    if (!newName) { toast('Il nome non può essere vuoto', 'err'); return; }
+    const btn = document.getElementById('saveEditNameBtn');
+    if (btn) { btn.disabled = true; btn.textContent = 'Salvataggio…'; }
+    try {
+        await db.collection(COL_USERS).doc(uid).update({ nome: newName });
+        // Se è l'utente corrente, aggiorna anche l'header
+        if (uid === currentAppUser.uid) {
+            currentAppUser.nome = newName;
+            updateHeaderUser();
+        }
+        document.getElementById('editNameModal').remove();
+        toast('Nome aggiornato con successo', 'ok');
+        await renderSettings();
+    } catch(e) {
+        toast('Errore: ' + e.message, 'err');
+        if (btn) { btn.disabled = false; btn.textContent = 'Salva'; }
     }
 }
 
@@ -1359,6 +1536,7 @@ let currentId = null;
 let deleteId = null;
 let editingId = null;
 let editAccounts = [];
+let personalCardAccounts = [];
 let viewMode = 'grid';
 let activeLetter = null;
 let importStep = 1;
@@ -2539,6 +2717,181 @@ document.addEventListener('keydown', e => {
         closeModal('detailModal'); closeModal('editModal'); closeModal('importModal'); closeModal('changePwdModal'); closeModal('reportModal'); closeConfirm();
     }
 });
-    </script>
+    
+
+/* ═══════════════════════════════════════════════
+   SCHEDA PERSONALE
+   ═══════════════════════════════════════════════ */
+
+function renderPersonalCardArea() {
+    // La scheda personale è ora accessibile dal nome utente in alto a destra
+    // Aggiorna il tooltip del badge con il conteggio account
+    const badge = document.getElementById('userBadge');
+    if (!badge || !currentAppUser) return;
+    const count = personalCardAccounts.length;
+    const countLabel = count === 0 ? 'Nessun account' : count + ' account';
+    badge.title = 'La mia scheda personale · ' + countLabel;
+}
+
+function openPersonalCard() {
+    const name = esc(currentAppUser.nome || currentAppUser.username || 'Utente');
+    const role = currentAppUser.ruolo === 'admin' ? 'Amministratore' : 'Operatore';
+    const accs = personalCardAccounts;
+
+    let html =
+        '<div class="pc-modal-header">' +
+            '<div style="display:flex;justify-content:space-between;align-items:flex-start">' +
+            '<div><div class="pc-modal-title">' + name + '</div>' +
+            '<div class="pc-modal-sub">' + role + ' · Scheda personale</div></div>' +
+            '<button class="close-btn" style="color:white;background:rgba(255,255,255,0.15);border:none;border-radius:8px;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;" onclick="closeModal(\'pcDetailModal\')">' + ic('x',16) + '</button>' +
+            '</div>' +
+        '</div>';
+
+    if (accs.length === 0) {
+        html += '<div style="text-align:center;padding:32px 0;color:var(--text-muted);">' +
+            '<div style="font-size:32px;margin-bottom:10px;opacity:0.3;">' + ic('lock',32) + '</div>' +
+            '<div style="font-size:14px;">Nessun account salvato</div>' +
+            '<div style="font-size:12px;margin-top:4px;">Clicca Modifica per aggiungere i tuoi account</div>' +
+        '</div>';
+    } else {
+        const byType = {};
+        accs.forEach(a => { (byType[a.type] = byType[a.type]||[]).push(a); });
+        html += '<div class="section-title">I miei account</div>';
+        Object.entries(byType).forEach(([type, list]) => {
+            list.forEach((acc, i) => {
+                const key = 'pc_' + type.replace(/\s/g,'_') + '_' + i;
+                html += '<div class="acc-card">' +
+                    '<div class="acc-type-label">' + ic('lock',13) + ' ' + esc(type) + (list.length>1?' #'+(i+1):'') + '</div>' +
+                    '<div class="acc-row"><div>' +
+                        '<div class="dlabel">Username / Email</div>' +
+                        '<div class="pwd-row">' +
+                            '<span class="pwd-val">' + (acc.username ? esc(acc.username) : '<em style="color:var(--text-muted);font-style:italic;font-size:12px">\u2014</em>') + '</span>' +
+                            (acc.username ? '<button class="icon-btn" onclick="cp(\'' + esc(acc.username).replace(/'/g,"\\'") + '\')" title="Copia">' + ic('copy',14) + '</button>' : '') +
+                        '</div></div><div>' +
+                        '<div class="dlabel">Password</div>' +
+                        '<div class="pwd-row">' +
+                            '<span class="pwd-val" id="' + esc(key) + '" data-pwd="' + esc(acc.password||'') + '" data-vis="0">' +
+                                (acc.password ? '\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022' : '<em style="color:var(--text-muted);font-style:italic;font-size:12px">\u2014</em>') +
+                            '</span>' +
+                            (acc.password ? '<button class="icon-btn" onclick="togglePwd(\'' + esc(key) + '\')" title="Mostra/Nascondi">' + ic('eye',14) + '</button>' +
+                                '<button class="icon-btn" onclick="cp(\'' + esc(acc.password).replace(/'/g,"\\'") + '\')" title="Copia">' + ic('copy',14) + '</button>' : '') +
+                        '</div></div></div>' +
+                    (acc.note ? '<div class="acc-note">' + esc(acc.note) + '</div>' : '') +
+                '</div>';
+            });
+        });
+    }
+
+    html += '<div class="modal-actions">' +
+        '<button class="btn btn-outline" onclick="closeModal(\'pcDetailModal\')">' + ic('x',14) + ' Chiudi</button>' +
+        '<button class="btn btn-primary" onclick="closeModal(\'pcDetailModal\');openEditPersonalCard()">' + ic('edit',14) + ' Modifica</button>' +
+    '</div>';
+
+    document.getElementById('pcDetailContent').innerHTML = html;
+    document.getElementById('pcDetailModal').classList.remove('hidden');
+}
+
+function openEditPersonalCard() {
+    const name = esc(currentAppUser.nome || currentAppUser.username || 'Utente');
+    // Deep copy
+    personalCardAccounts = JSON.parse(JSON.stringify(personalCardAccounts));
+
+    let html =
+        '<div class="pc-modal-header">' +
+            '<div style="display:flex;justify-content:space-between;align-items:flex-start">' +
+            '<div><div class="pc-modal-title">' + ic('edit',18) + ' Modifica scheda personale</div>' +
+            '<div class="pc-modal-sub">' + name + '</div></div>' +
+            '<button class="close-btn" style="color:white;background:rgba(255,255,255,0.15);border:none;border-radius:8px;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;" onclick="closeModal(\'pcEditModal\')">' + ic('x',16) + '</button>' +
+            '</div>' +
+        '</div>' +
+        '<div class="form-section-title" style="margin-top:4px">I miei account</div>' +
+        '<div id="pcAccFormList"></div>' +
+        '<button type="button" class="add-acc-btn" onclick="addPersonalAcc()" style="margin-top:8px">+ Aggiungi Account</button>' +
+        '<div class="modal-actions" style="margin-top:24px">' +
+            '<button class="btn btn-outline" onclick="closeModal(\'pcEditModal\')">' + ic('x',14) + ' Annulla</button>' +
+            '<button class="btn btn-primary ml-auto" onclick="savePersonalCard()">' + ic('check',14) + ' Salva</button>' +
+        '</div>';
+
+    document.getElementById('pcEditContent').innerHTML = html;
+    document.getElementById('pcEditModal').classList.remove('hidden');
+    renderPersonalAccForm();
+}
+
+function renderPersonalAccForm() {
+    const list = document.getElementById('pcAccFormList');
+    if (!list) return;
+    list.innerHTML = personalCardAccounts.map((acc, i) => {
+        const isCustom = acc.type && !ACCOUNT_TYPES.includes(acc.type);
+        const selectVal = isCustom ? 'Altro' : acc.type;
+        const showCustomInput = isCustom || acc.type === 'Altro';
+        return '<div class="acc-form-item" id="pcafi_' + i + '">' +
+            '<div class="acc-form-header">' +
+                '<div style="flex:1;display:flex;flex-direction:column;gap:6px;max-width:175px">' +
+                '<select class="fselect" style="width:100%" onchange="handlePersonalAccTypeChange(' + i + ',this.value)">' +
+                    ACCOUNT_TYPES.map(t=>'<option value="' + esc(t) + '"' + (t===selectVal?' selected':'') + '>' + esc(t) + '</option>').join('') +
+                '</select>' +
+                (showCustomInput ?
+                    '<div style="display:flex;gap:4px;align-items:center">' +
+                    '<input class="finput" id="pc_custom_type_' + i + '" placeholder="Nome account personalizzato" value="' + (isCustom ? esc(acc.type) : '') + '" style="flex:1;font-size:13px" oninput="updPersonalAcc(' + i + ',\'pendingCustomType\',this.value)" onkeydown="if(event.key===\'Enter\'){confirmPersonalCustomType(' + i + ')}"/>' +
+                    '<button type="button" onclick="confirmPersonalCustomType(' + i + ')" style="background:var(--primary);color:#fff;border:none;border-radius:6px;padding:0 10px;height:36px;cursor:pointer;font-size:12px;white-space:nowrap">Aggiungi</button>' +
+                    '</div>'
+                    : '') +
+                '</div>' +
+                '<button type="button" style="margin-left:auto;background:none;border:none;cursor:pointer;color:var(--danger);padding:4px;border-radius:6px;display:flex;" onclick="rmPersonalAcc(' + i + ')">' + ic('x',16) + '</button>' +
+            '</div>' +
+            '<div class="acc-form-row">' +
+                '<div class="form-group"><label class="flabel">Username / Email</label>' +
+                    '<input class="finput" value="' + esc(acc.username||'') + '" oninput="updPersonalAcc(' + i + ',\'username\',this.value)" placeholder="username o email"></div>' +
+                '<div class="form-group"><label class="flabel">Password</label>' +
+                    '<div class="pwd-input-wrap">' +
+                        '<input class="finput" id="pcfp_' + i + '" type="password" value="' + esc(acc.password||'') + '" oninput="updPersonalAcc(' + i + ',\'password\',this.value)" placeholder="password">' +
+                        '<button type="button" class="pwd-eye" onclick="togglePersonalFormPwd(' + i + ')">' + ic('eye',14) + '</button>' +
+                    '</div></div>' +
+            '</div>' +
+            '<div class="form-group" style="margin-top:8px"><label class="flabel">Nota</label>' +
+                '<input class="finput" value="' + esc(acc.note||'') + '" oninput="updPersonalAcc(' + i + ',\'note\',this.value)" placeholder="es. account principale"></div>' +
+        '</div>';
+    }).join('');
+}
+
+function addPersonalAcc() {
+    personalCardAccounts.push({ type:'MEGA', username:'', password:'', note:'' });
+    renderPersonalAccForm();
+    setTimeout(()=>{ const el=document.getElementById('pcafi_'+(personalCardAccounts.length-1)); if(el) el.scrollIntoView({behavior:'smooth',block:'center'}); },50);
+}
+function rmPersonalAcc(i) { personalCardAccounts.splice(i,1); renderPersonalAccForm(); }
+function updPersonalAcc(i,f,v) { if(personalCardAccounts[i]) personalCardAccounts[i][f]=v; }
+function togglePersonalFormPwd(i) { const el=document.getElementById('pcfp_'+i); if(el) el.type=el.type==='password'?'text':'password'; }
+function handlePersonalAccTypeChange(i, val) {
+    if (!personalCardAccounts[i]) return;
+    personalCardAccounts[i].type = val;
+    personalCardAccounts[i].pendingCustomType = '';
+    renderPersonalAccForm();
+    if (val === 'Altro') { setTimeout(()=>{ const inp=document.getElementById('pc_custom_type_'+i); if(inp) inp.focus(); },50); }
+}
+function confirmPersonalCustomType(i) {
+    const acc = personalCardAccounts[i]; if (!acc) return;
+    const inp = document.getElementById('pc_custom_type_'+i);
+    const val = (inp ? inp.value : acc.pendingCustomType||'').trim();
+    if (!val) return;
+    if (!ACCOUNT_TYPES.includes(val)) ACCOUNT_TYPES.splice(ACCOUNT_TYPES.length-1,0,val);
+    acc.type = val; delete acc.pendingCustomType;
+    renderPersonalAccForm();
+}
+
+async function savePersonalCard() {
+    const toSave = personalCardAccounts.filter(a=>a.username||a.password);
+    try {
+        await db.collection(COL_USERS).doc(currentAppUser.uid).update({
+            'personalCard': { accounts: toSave }
+        });
+        personalCardAccounts = toSave;
+        renderPersonalCardArea();
+        closeModal('pcEditModal');
+        toast('Scheda personale salvata','ok');
+    } catch(e) { toast('Errore salvataggio: ' + e.message,'err'); }
+}
+
+</script>
 </body>
 </html>
